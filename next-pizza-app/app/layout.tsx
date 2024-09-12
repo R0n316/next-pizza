@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import React from "react";
+import {Header} from "@/components/shared/header";
 
 const inter = Nunito({
     subsets: ['cyrillic'],
@@ -23,6 +24,7 @@ export default function RootLayout({
         <html lang="en">
             <body className={inter.className}>
                 <main className={'min-h-screen'}>
+                    <Header/>
                     {children}
                 </main>
             </body>
