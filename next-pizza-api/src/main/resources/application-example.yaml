@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: next-pizza-api
+  datasource:
+    driver-class-name:
+    url:
+    username:
+    password:
