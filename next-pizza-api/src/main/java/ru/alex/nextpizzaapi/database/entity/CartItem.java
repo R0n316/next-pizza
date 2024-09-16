@@ -1,4 +1,4 @@
-package ru.alex.nextpizzaapi.entity;
+package ru.alex.nextpizzaapi.database.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

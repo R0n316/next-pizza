@@ -1,17 +1,15 @@
-package ru.alex.nextpizzaapi.entity;
+package ru.alex.nextpizzaapi.database.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ingredient extends AuditableEntity {
+public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

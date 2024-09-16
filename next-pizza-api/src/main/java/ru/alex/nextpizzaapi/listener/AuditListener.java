@@ -2,7 +2,7 @@ package ru.alex.nextpizzaapi.listener;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import ru.alex.nextpizzaapi.entity.AuditableEntity;
+import ru.alex.nextpizzaapi.database.entity.AuditableEntity;
 
 import java.time.Instant;
 
