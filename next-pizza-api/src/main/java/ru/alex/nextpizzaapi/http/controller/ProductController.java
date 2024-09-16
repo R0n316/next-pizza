@@ -21,7 +21,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductReadDto> findAllLikeName(@RequestParam(value = "name",required = false) String name) {
+    public List<ProductReadDto> findAll(@RequestParam(value = "name", required = false) String name) {
         return productService.findAllLikeName(name);
     }
 }

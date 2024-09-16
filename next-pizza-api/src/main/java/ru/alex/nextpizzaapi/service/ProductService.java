@@ -1,6 +1,7 @@
 package ru.alex.nextpizzaapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.alex.nextpizzaapi.database.repository.ProductRepository;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductReadMapper productReadMapper;
+
     @Autowired
     public ProductService(ProductRepository productRepository,
                           ProductReadMapper productReadMapper) {
@@ -20,7 +22,7 @@ public class ProductService {
     }
 
     public List<ProductReadDto> findAllLikeName(String name) {
-        return productRepository.findAllLikeName("%" + name + "%")
+        return productRepository.findAllLikeName("%" + name + "%", Pageable.ofSize(5))
                 .stream()
                 .map(productReadMapper::toDto)
                 .toList();
