@@ -18,10 +18,7 @@ public class ProductItem {
     private Integer id;
 
     private Integer price;
-
-    @Column(name = "size")
-    @Enumerated
-    private ProductSize size;
+    private Integer size;
 
     @Column(name = "pizza_type")
     @Enumerated
