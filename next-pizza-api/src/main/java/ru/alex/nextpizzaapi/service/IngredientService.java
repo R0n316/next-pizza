@@ -3,26 +3,27 @@ package ru.alex.nextpizzaapi.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.alex.nextpizzaapi.database.repository.IngredientRepository;
-import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
-import ru.alex.nextpizzaapi.mapper.IngredientReadMapper;
+import ru.alex.nextpizzaapi.dto.ingredient.IngredientPreviewDto;
+import ru.alex.nextpizzaapi.mapper.IngredientPreviewMapper;
 
 import java.util.List;
 
 @Service
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
-    private final IngredientReadMapper ingredientReadMapper;
+    private final IngredientPreviewMapper ingredientPreviewMapper;
+
     @Autowired
     public IngredientService(IngredientRepository ingredientRepository,
-                             IngredientReadMapper ingredientReadMapper) {
+                             IngredientPreviewMapper ingredientPreviewMapper) {
         this.ingredientRepository = ingredientRepository;
-        this.ingredientReadMapper = ingredientReadMapper;
+        this.ingredientPreviewMapper = ingredientPreviewMapper;
     }
 
-    public List<IngredientReadDto> findAll() {
+    public List<IngredientPreviewDto> findAll() {
         return ingredientRepository.findAll()
                 .stream()
-                .map(ingredientReadMapper::toDto)
+                .map(ingredientPreviewMapper::toDto)
                 .toList();
     }
 }

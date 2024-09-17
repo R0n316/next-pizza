@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
+import ru.alex.nextpizzaapi.dto.ingredient.IngredientPreviewDto;
 import ru.alex.nextpizzaapi.service.IngredientService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<IngredientReadDto> findAll() {
+    public List<IngredientPreviewDto> findAll() {
         return ingredientService.findAll();
     }
 }

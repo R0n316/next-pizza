@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Search} from "lucide-react";
 import {Input} from "@/components/ui";
 import {cn} from "@/lib/utils";
@@ -23,12 +23,24 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
         setFocused(false);
     });
 
-    useDebounce(() => {
-        Api.products.search(searchQuery).then(items => {
-            setProducts(items);
-        })},
+    useDebounce(
+        async () => {
+            try {
+                const response = await Api.products.search(searchQuery);
+                setProducts(response);
+            } catch (error) {
+                console.error(error);
+            }
+        },
         250,
-        [searchQuery]);
+        [searchQuery]
+    );
+
+    const onClickItem = () => {
+        setFocused(false);
+        setSearchQuery('');
+        setProducts([]);
+    }
 
     return (
         <>
@@ -51,6 +63,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
                     {
                         products.map(product => (
                             <Link key={product.id}
+                                  onClick={onClickItem}
                                   href={`/product/${product.id}`}
                                   className={"flex items-center px-3 py-px hover:bg-primary/10"}>
                                 <div className={'px-3 py-2 flex items-center gap-3'}>
