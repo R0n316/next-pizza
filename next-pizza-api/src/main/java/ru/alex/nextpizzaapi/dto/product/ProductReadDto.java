@@ -9,7 +9,7 @@ public record ProductReadDto(
         Integer id,
         String name,
         String imageUrl,
-        List<ProductItemReadDto> items, // Sort by price
+        List<ProductItemReadDto> items,
         List<IngredientPreviewDto> ingredients
 ) {
 }

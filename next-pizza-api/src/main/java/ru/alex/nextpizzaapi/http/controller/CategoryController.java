@@ -23,18 +23,4 @@ public class CategoryController {
     public List<CategoryReadDto> findAll() {
         return categoryService.findAll();
     }
-     /*
-     {
-        category: string,
-        product: {
-            ...product,
-            product.ingredients: {
-
-            }
-            product.items: {
-
-            }
-        }
-     }
-      */
 }
