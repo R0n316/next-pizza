@@ -5,8 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false, exclude = {"productItems"})
-@ToString(exclude = "productItems")
+@EqualsAndHashCode(callSuper = false, exclude = {"productItems", "ingredientProducts"})
+@ToString(exclude = {"productItems", "ingredientProducts"})
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,4 +27,7 @@ public class Product extends AuditableEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ProductItem> productItems;
+
+    @OneToMany(mappedBy = "product")
+    private List<IngredientProduct> ingredientProducts;
 }

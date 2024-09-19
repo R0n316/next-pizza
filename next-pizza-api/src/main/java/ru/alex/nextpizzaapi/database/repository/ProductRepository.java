@@ -13,4 +13,20 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p WHERE p.name ILIKE :name")
     List<Product> findAllLikeName(String name, Pageable pageable);
+
+
+    @Query("""
+            SELECT p
+            FROM Product p
+            LEFT JOIN FETCH p.productItems
+        """)
+    List<Product> findAllWithProductItems();
+
+    @Query("""
+        SELECT p
+        FROM Product p
+        LEFT JOIN FETCH p.ingredientProducts ip
+        LEFT JOIN FETCH ip.ingredient
+        """)
+    List<Product> findAllWithIngredients();
 }

@@ -4,27 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.alex.nextpizzaapi.database.repository.ProductRepository;
-import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
-import ru.alex.nextpizzaapi.mapper.ProductReadMapper;
+import ru.alex.nextpizzaapi.dto.product.ProductPreviewDto;
+import ru.alex.nextpizzaapi.mapper.ProductPreviewMapper;
 
 import java.util.List;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProductReadMapper productReadMapper;
+    private final ProductPreviewMapper productPreviewMapper;
 
     @Autowired
     public ProductService(ProductRepository productRepository,
-                          ProductReadMapper productReadMapper) {
+                          ProductPreviewMapper productPreviewMapper) {
         this.productRepository = productRepository;
-        this.productReadMapper = productReadMapper;
+        this.productPreviewMapper = productPreviewMapper;
     }
 
-    public List<ProductReadDto> findAllLikeName(String name) {
+    public List<ProductPreviewDto> findAllLikeName(String name) {
         return productRepository.findAllLikeName("%" + name + "%", Pageable.ofSize(5))
                 .stream()
-                .map(productReadMapper::toDto)
+                .map(productPreviewMapper::toDto)
                 .toList();
     }
 }
