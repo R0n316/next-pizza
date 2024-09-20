@@ -1,11 +1,9 @@
 package ru.alex.nextpizzaapi.http.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.alex.nextpizzaapi.dto.product.ProductPreviewDto;
+import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
 import ru.alex.nextpizzaapi.service.ProductService;
 
 import java.util.List;
@@ -23,5 +21,10 @@ public class ProductController {
     @GetMapping
     public List<ProductPreviewDto> findAll(@RequestParam(value = "name", required = false) String name) {
         return productService.findAllLikeName(name);
+    }
+
+    @GetMapping("/{id}")
+    public ProductReadDto findById(@PathVariable("id") Integer id) {
+        return productService.findById(id);
     }
 }
