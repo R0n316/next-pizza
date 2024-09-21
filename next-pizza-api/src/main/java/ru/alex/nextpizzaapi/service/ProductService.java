@@ -1,6 +1,5 @@
 package ru.alex.nextpizzaapi.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,6 @@ public class ProductService {
     public ProductReadDto findById(Integer id) {
         return productRepository.findById(id)
                 .map(productReadMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("product not found"));
+                .orElse(null);
     }
 }
