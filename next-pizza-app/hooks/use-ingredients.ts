@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import {IngredientItem} from "@/services/model";
+import {Ingredient} from "@/services/model";
 import {Api} from "@/services/api-client";
 
 export const useIngredients = () => {
-    const [ingredients, setIngredients] = useState<IngredientItem[]>([]);
+    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

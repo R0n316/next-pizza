@@ -53,7 +53,7 @@ VALUES
 
 INSERT INTO product(name, image_url, category_id)
 VALUES
-('Пепперони фреш', 'https://media.dodostatic.net/image/r:584x584/11EE7D61304FAF5A98A6958F2BB2D260.webp', 1),
+('Пепперони фреш', 'https://media.dodostatic.net/image/r:584x584/11EE7D6130241E75B0AB33725248C0D0.avif', 1),
 ('Сырная', 'https://media.dodostatic.net/image/r:584x584/11EE7D610D91679BB519F38C3F45880F.avif', 1),
 ('Чоризо фреш', 'https://media.dodostatic.net/image/r:584x584/11EE7D61706D472F9A5D71EB94149304.webp', 1);
 
