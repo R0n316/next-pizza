@@ -17,7 +17,7 @@ export interface Product {
     id: number;
     name: string;
     imageUrl: string;
-    items?: ProductItem[];
+    items: ProductItem[];
     ingredients: Ingredient[];
 }
 
