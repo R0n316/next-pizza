@@ -1,12 +1,12 @@
 package ru.alex.nextpizzaapi.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@EqualsAndHashCode(callSuper = false)
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = false, exclude = "ingredients")
+@ToString(exclude = "ingredients")
 @Entity
 @Table(name = "cart_item")
 @Data
@@ -17,6 +17,8 @@ public class CartItem extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer quantity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_item_id", referencedColumnName = "id")
     private ProductItem productItem;
@@ -25,5 +27,6 @@ public class CartItem extends AuditableEntity {
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
-    private Integer quantity;
+    @OneToMany(mappedBy = "cartItem")
+    private List<CartItemIngredient> ingredients;
 }
