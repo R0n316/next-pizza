@@ -7,6 +7,7 @@ import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
 import ru.alex.nextpizzaapi.dto.productItem.ProductItemReadDto;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -26,6 +27,7 @@ public class ProductReadMapper implements Mapper<Product, ProductReadDto> {
         List<ProductItemReadDto> productItems = entity.getProductItems()
                 .stream()
                 .map(productItemReadMapper::toDto)
+                .sorted(Comparator.comparing(ProductItemReadDto::price))
                 .toList();
 
         List<IngredientReadDto> ingredients = entity.getIngredientProducts()

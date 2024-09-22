@@ -6,18 +6,18 @@ export interface Ingredient {
 
 }
 
-export interface Item {
+export interface ProductItem {
     id: number;
     price: number;
     size: number;
-    pizzaType: string;
+    pizzaType: number;
 }
 
 export interface Product {
     id: number;
     name: string;
     imageUrl: string;
-    items?: Item[];
+    items?: ProductItem[];
     ingredients: Ingredient[];
 }
 

@@ -3,7 +3,6 @@ import {cn} from "@/lib/utils";
 import {Title} from "@/components/shared/title";
 import {Button} from "@/components/ui";
 import Image from "next/image";
-import {Product} from "@/services/model";
 
 interface Props {
     name: string;
