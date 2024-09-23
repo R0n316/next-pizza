@@ -11,7 +11,8 @@ public class IngredientPreviewMapper implements Mapper<Ingredient, IngredientPre
     public IngredientPreviewDto toDto(Ingredient entity) {
         return new IngredientPreviewDto(
                 entity.getId(),
-                entity.getName()
+                entity.getName(),
+                entity.getPrice()
         );
     }
 }
