@@ -9,6 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
-    @Query("SELECT c FROM Cart c WHERE c.token = :token OR c.user.id = :userId")
+    @Query("""
+            SELECT c FROM Cart c
+            LEFT JOIN FETCH c.cartItems ci
+            LEFT JOIN FETCH ci.productItem pi
+            LEFT JOIN FETCH pi.product p
+            WHERE c.token = :token OR c.user.id = :userId""")
     Optional<Cart> findByTokenOrUser(String token, Integer userId);
+
 }
