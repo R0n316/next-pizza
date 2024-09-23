@@ -118,10 +118,10 @@ VALUES
 (17, 249);
 
 
-INSERT INTO cart(user_id, token)
+INSERT INTO cart(user_id, token, total_amount)
 VALUES
-(1, '11111'),
-(2, '22222');
+(1, '11111', 650),
+(2, '22222', 1000);
 
 INSERT INTO cart_item(product_item_id, cart_id, quantity)
 VALUES

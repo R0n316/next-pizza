@@ -8,6 +8,7 @@ public record CartReadDto(
         Integer id,
         Integer userId,
         String token,
+        Integer totalAmount,
         List<CartItemReadDto> items
 ) {
 }

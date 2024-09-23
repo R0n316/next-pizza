@@ -14,7 +14,7 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
             LEFT JOIN FETCH c.cartItems ci
             LEFT JOIN FETCH ci.productItem pi
             LEFT JOIN FETCH pi.product p
-            WHERE c.token = :token OR c.user.id = :userId""")
-    Optional<Cart> findByTokenOrUser(String token, Integer userId);
+            WHERE c.token = :token""")
+    Optional<Cart> findByToken(String token);
 
 }

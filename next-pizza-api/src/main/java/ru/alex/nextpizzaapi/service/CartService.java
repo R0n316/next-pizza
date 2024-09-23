@@ -1,21 +1,18 @@
 package ru.alex.nextpizzaapi.service;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.alex.nextpizzaapi.database.repository.CartItemRepository;
 import ru.alex.nextpizzaapi.database.repository.CartRepository;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
+import ru.alex.nextpizzaapi.dto.cartItem.CartItemReadDto;
 import ru.alex.nextpizzaapi.mapper.CartReadMapper;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CartService {
-    private final Integer userId = 1;
-
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final CartReadMapper cartReadMapper;
@@ -30,22 +27,27 @@ public class CartService {
     }
 
     public CartReadDto getCart(HttpServletRequest request) {
-        Cookie[] cookies = {new Cookie("token", "11111")};
-        if(cookies == null) {
-            return null;
-        }
-        Optional<String> token = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("token"))
+        return Optional.ofNullable(request.getCookies())
+                .stream()
+                .flatMap(Arrays::stream)
+                .filter(c -> c.getName().equals("cartToken"))
                 .findFirst()
-                .map(Cookie::getName);
-        return token.flatMap(s -> cartRepository
-                        .findByTokenOrUser(s, userId)
-                        .map(cart -> {
-                            cartItemRepository.findCartItemsWithIngredients(cart.getId());
-                            return cartReadMapper.toDto(cart);
-                        })
-                )
-                .orElse(null);
+                .flatMap(cookie -> cartRepository.findByToken(cookie.getValue()))
+                .map(cart -> {
+                    cartItemRepository.findCartItemsWithIngredients(cart.getId());
+                    CartReadDto cartReadDto = cartReadMapper.toDto(cart);
+                    List<CartItemReadDto> sortedItems = new ArrayList<>(cartReadDto.items());
+                    sortedItems.sort(Comparator.comparing(CartItemReadDto::createdAt).reversed());
+                    return new CartReadDto(
+                            cartReadDto.id(),
+                            cartReadDto.userId(),
+                            cartReadDto.token(),
+                            cartReadDto.totalAmount(),
+                            sortedItems
+                    );
+                })
+                .orElse(new CartReadDto(null, null, null, 0, List.of()));
+
         // TODO если корзины нет, то создавать её
     }
 }

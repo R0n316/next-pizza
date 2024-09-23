@@ -33,6 +33,7 @@ public class CartReadMapper implements Mapper<Cart, CartReadDto> {
                 entity.getId(),
                 userId,
                 entity.getToken(),
+                entity.getTotalAmount(),
                 items
         );
     }

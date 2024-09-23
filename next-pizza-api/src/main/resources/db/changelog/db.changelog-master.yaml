@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/db-create-verification-code-table-1.0.sql
   - include:
       file: db/changelog/db-create-users-table-1.1.sql
+  - include:
+      file: db/changelog/db-create-cart-table-1.1.sql

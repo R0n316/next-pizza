@@ -22,6 +22,9 @@ public class Cart extends AuditableEntity {
 
     private String token;
 
+    @Column(name = "total_amount")
+    private Integer totalAmount;
+
     @OneToMany(mappedBy = "cart")
     List<CartItem> cartItems;
 }
