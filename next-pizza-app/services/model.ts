@@ -11,6 +11,7 @@ export interface ProductItem {
     price: number;
     size: number;
     pizzaType: number;
+    product: Product;
 }
 
 export interface Product {
@@ -25,4 +26,20 @@ export interface Category {
     id: number;
     name: string;
     products: Product[];
+}
+
+export interface Cart {
+    id: number;
+    userId: number;
+    token: string;
+    totalAmount: number;
+    items: CartItem[];
+}
+
+export interface CartItem {
+    id: number;
+    productItem: ProductItem;
+    ingredients: Ingredient[];
+    quantity: number;
+    createdAt: string
 }
