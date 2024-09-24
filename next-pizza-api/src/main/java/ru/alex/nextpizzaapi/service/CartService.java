@@ -1,6 +1,5 @@
 package ru.alex.nextpizzaapi.service;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,7 @@ public class CartService {
     }
 
     public CartReadDto getCart(HttpServletRequest request) {
-//        return Optional.ofNullable(request.getCookies())
-        return Optional.ofNullable(new Cookie[]{new Cookie("cartToken", "11111")}) // TODO fix
+        return Optional.ofNullable(request.getCookies())
                 .stream()
                 .flatMap(Arrays::stream)
                 .filter(c -> c.getName().equals("cartToken"))
