@@ -56,8 +56,8 @@ public class CartService {
             Optional<Cart> cartOptional = cartRepository.findByToken(token.getValue());
             if(cartOptional.isPresent()) {
                 Cart cart = cartOptional.get();
-                Optional<CartItem> optionalCartItem = cartItemRepository.findById(itemId);
-                CartItem cartItem = optionalCartItem
+                Optional<CartItem> cartItemOptional = cartItemRepository.findById(itemId);
+                CartItem cartItem = cartItemOptional
                         .orElseThrow(() -> new CartItemNotFoundException("No CartItem found with id: " + itemId));
 
                 cartItemRepository.updateQuantity(quantity, cartItem.getQuantity());
@@ -71,13 +71,33 @@ public class CartService {
                 cartRepository.flush();
                 return cartReadMapper.toDto(cart);
             } else {
-                throw new CartNotFoundException("cart not found");
+                throw new CartNotFoundException();
             }
-        }).orElseThrow(() -> new CartTokenNotFoundException("cart token not found"));
+        }).orElseThrow(CartTokenNotFoundException::new);
     }
 
+    @Transactional
+    public CartReadDto deleteItem(Integer itemId, HttpServletRequest request) {
+        Optional<Cookie> cartToken = getCartToken(request.getCookies());
 
+        return cartToken.map(token -> {
+            Optional<Cart> cartOptional = cartRepository.findByToken(token.getValue());
+            if(cartOptional.isPresent()) {
+                Cart cart = cartOptional.get();
+                Optional<CartItem> cartItemOptional = cartItemRepository.findById(itemId);
+                CartItem cartItem = cartItemOptional
+                        .orElseThrow(() -> new CartItemNotFoundException("No CartItem found with id: " + itemId));
+                cartItemRepository.delete(cartItem.getId());
+                cartItemRepository.findCartItemsWithIngredients(cart.getId());
 
+                cartRepository.flush();
+                return cartReadMapper.toDto(cart);
+            } else {
+                throw new CartNotFoundException();
+            }
+
+        }).orElseThrow(CartTokenNotFoundException::new);
+    }
 
     private Optional<Cookie> getCartToken(Cookie[] cookies) {
         return Optional.ofNullable(cookies)

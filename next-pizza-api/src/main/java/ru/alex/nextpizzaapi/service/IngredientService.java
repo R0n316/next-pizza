@@ -2,6 +2,7 @@ package ru.alex.nextpizzaapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.alex.nextpizzaapi.database.repository.IngredientRepository;
 import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
 import ru.alex.nextpizzaapi.mapper.IngredientReadMapper;
@@ -9,6 +10,7 @@ import ru.alex.nextpizzaapi.mapper.IngredientReadMapper;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
     private final IngredientReadMapper ingredientReadMapper;

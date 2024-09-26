@@ -28,4 +28,10 @@ public class CartController {
                                               HttpServletRequest request) {
         return cartService.updateItemQuantity(data.quantity(), itemId, request);
     }
+
+    @DeleteMapping("/{id}")
+    public CartReadDto deleteCartItem(@PathVariable("id") Integer id,
+                                      HttpServletRequest request) {
+        return cartService.deleteItem(id, request);
+    }
 }
