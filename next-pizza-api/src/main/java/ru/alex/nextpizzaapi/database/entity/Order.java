@@ -29,6 +29,7 @@ public class Order extends AuditableEntity {
     private int totalAmount;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private OrderStatus orderStatus;
 
     @Column(name = "payment_id")
