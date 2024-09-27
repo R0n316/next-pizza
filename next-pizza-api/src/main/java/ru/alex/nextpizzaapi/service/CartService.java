@@ -87,7 +87,13 @@ public class CartService {
                 Optional<CartItem> cartItemOptional = cartItemRepository.findById(itemId);
                 CartItem cartItem = cartItemOptional
                         .orElseThrow(() -> new CartItemNotFoundException("No CartItem found with id: " + itemId));
-                cartItemRepository.delete(cartItem.getId());
+
+                cartItemRepository.findCartItemsWithIngredients(cart.getId());
+                Integer updatedTotalAmount = CartUtils.countTotalAmount(cart.getCartItems());
+                cartRepository.updateTotalAmount(updatedTotalAmount, cart.getId());
+
+                cart.getCartItems().remove(cartItem);
+                cartItemRepository.delete(cartItem);
                 cartItemRepository.findCartItemsWithIngredients(cart.getId());
 
                 cartRepository.flush();
