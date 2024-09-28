@@ -43,3 +43,8 @@ export interface CartItem {
     quantity: number;
     createdAt: string
 }
+
+export interface CartItemCreateDto {
+    productItemId: number;
+    ingredientIds?: number[];
+}

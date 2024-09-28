@@ -54,7 +54,6 @@ public class CartService {
                     return cartReadMapper.toDto(cart);
                 })
                 .orElse(new CartReadDto(null, null, null, 0, List.of()));
-        // TODO если корзины нет, то создавать её
     }
 
     @Transactional
@@ -74,8 +73,9 @@ public class CartService {
         );
         if (findCartItem.isPresent()) {
             CartItem cartItem = findCartItem.get();
-            cartItemRepository.updateQuantity(cartItemDto.quantity(), cartItem.getId());
-            cartItem.setQuantity(cartItemDto.quantity());
+            Integer updatedQuantity = cartItem.getQuantity() + 1;
+            cartItemRepository.updateQuantity(updatedQuantity, cartItem.getId());
+            cartItem.setQuantity(updatedQuantity);
             cart.getCartItems().add(cartItem);
 
         } else {
@@ -104,10 +104,11 @@ public class CartService {
 
         }
         Cart updatedCart = cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+                .orElseThrow(CartNotFoundException::new);
 
         Integer updatedTotalAmount = countTotalAmount(updatedCart.getCartItems());
         cartRepository.updateTotalAmount(updatedTotalAmount, updatedCart.getId());
+        cart.setTotalAmount(updatedTotalAmount);
 
         return cartReadMapper.toDto(updatedCart);
     }
@@ -124,15 +125,15 @@ public class CartService {
                 CartItem cartItem = cartItemOptional
                         .orElseThrow(() -> new CartItemNotFoundException("No CartItem found with id: " + itemId));
 
-                cartItemRepository.updateQuantity(quantity, cartItem.getQuantity());
                 cartItem.setQuantity(quantity);
-
+                cartItemRepository.updateQuantity(quantity, cartItem.getQuantity());
+                cartRepository.flush();
 
                 Integer updatedTotalAmount = countTotalAmount(cart.getCartItems());
 
                 cartItemRepository.findCartItemsWithIngredients(cart.getId());
                 cartRepository.updateTotalAmount(updatedTotalAmount, cart.getId());
-                cartRepository.flush();
+                cart.setTotalAmount(updatedTotalAmount);
                 return cartReadMapper.toDto(cart);
             } else {
                 throw new CartNotFoundException();
@@ -153,13 +154,13 @@ public class CartService {
                         .orElseThrow(() -> new CartItemNotFoundException("No CartItem found with id: " + itemId));
 
                 cartItemRepository.findCartItemsWithIngredients(cart.getId());
-                Integer updatedTotalAmount = countTotalAmount(cart.getCartItems());
-                cartRepository.updateTotalAmount(updatedTotalAmount, cart.getId());
 
                 cart.getCartItems().remove(cartItem);
                 cartItemRepository.delete(cartItem);
                 cartItemRepository.findCartItemsWithIngredients(cart.getId());
-
+                Integer updatedTotalAmount = countTotalAmount(cart.getCartItems());
+                cartRepository.updateTotalAmount(updatedTotalAmount, cart.getId());
+                cart.setTotalAmount(updatedTotalAmount);
                 cartRepository.flush();
                 return cartReadMapper.toDto(cart);
             } else {

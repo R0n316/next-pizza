@@ -28,6 +28,6 @@ public class CartItem extends AuditableEntity {
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
-    @OneToMany(mappedBy = "cartItem")
+    @OneToMany(mappedBy = "cartItem", cascade = CascadeType.REMOVE)
     private List<CartItemIngredient> ingredients;
 }
