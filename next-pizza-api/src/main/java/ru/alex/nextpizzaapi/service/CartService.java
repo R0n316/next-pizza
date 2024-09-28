@@ -68,6 +68,7 @@ public class CartService {
         Cart cart = findOrCreateCart(token, response);
         Optional<CartItem> findCartItem = cartItemRepository.findByCartAndIngredients(
                 cart.getId(),
+                cartItemDto.productItemId(),
                 cartItemDto.ingredientIds(),
                 cartItemDto.ingredientIds().size()
         );
@@ -76,7 +77,6 @@ public class CartService {
             Integer updatedQuantity = cartItem.getQuantity() + 1;
             cartItemRepository.updateQuantity(updatedQuantity, cartItem.getId());
             cartItem.setQuantity(updatedQuantity);
-            cart.getCartItems().add(cartItem);
 
         } else {
             ProductItem productItem = productItemRepository.findById(cartItemDto.productItemId())
@@ -95,8 +95,8 @@ public class CartService {
                     .quantity(1)
                     .ingredients(ingredients)
                     .build();
-            cart.getCartItems().add(newCartItem);
             CartItem savedCartItem = cartItemRepository.save(newCartItem);
+            cart.setCartItems(cartItemRepository.findByCart(cart.getId()));
             for(CartItemIngredient ingredient: ingredients) {
                 ingredient.setCartItem(savedCartItem);
             }

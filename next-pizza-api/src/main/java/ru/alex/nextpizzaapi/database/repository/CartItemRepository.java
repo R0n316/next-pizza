@@ -28,14 +28,15 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
         SELECT ci
         FROM CartItem ci
-        JOIN FETCH CartItemIngredient cii ON ci.id = cii.cartItem.id
-        WHERE ci.cart.id = :cartId
+        LEFT JOIN FETCH CartItemIngredient cii ON ci.id = cii.cartItem.id
+        WHERE ci.cart.id = :cartId AND ci.productItem.id = :productItemId
         GROUP BY ci.id
         HAVING COUNT(DISTINCT cii.ingredient.id) = :ingredientsCount
         AND SUM(CASE WHEN cii.ingredient.id IN :ingredients THEN 1 ELSE 0 END) = COUNT(DISTINCT cii.ingredient.id)
         """)
     Optional<CartItem> findByCartAndIngredients(
             Integer cartId,
+            Integer productItemId,
             List<Integer> ingredients,
             Integer ingredientsCount
     );
@@ -47,4 +48,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
         (1, :productItemId, :cartId)
         """, nativeQuery = true)
     void create(Integer productItemId, Integer cartId);
+
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId ORDER BY ci.createdAt DESC")
+    List<CartItem> findByCart(Integer cartId);
 }
