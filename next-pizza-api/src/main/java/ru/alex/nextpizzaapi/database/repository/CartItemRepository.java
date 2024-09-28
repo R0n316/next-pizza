@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.alex.nextpizzaapi.database.entity.CartItem;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
@@ -20,6 +21,30 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 
 
     @Modifying
-    @Query("UPDATE CartItem ci SET ci.quantity = :quantity WHERE ci.id = :id")
-    void updateQuantity(Integer quantity, Integer id);
+    @Query("UPDATE CartItem ci SET ci.quantity = :quantity WHERE ci.id = :cartItemId")
+    void updateQuantity(Integer quantity, Integer cartItemId);
+
+
+    @Query("""
+        SELECT ci
+        FROM CartItem ci
+        JOIN FETCH CartItemIngredient cii ON ci.id = cii.cartItem.id
+        WHERE ci.cart.id = :cartId
+        GROUP BY ci.id
+        HAVING COUNT(DISTINCT cii.ingredient.id) = :ingredientsCount
+        AND SUM(CASE WHEN cii.ingredient.id IN :ingredients THEN 1 ELSE 0 END) = COUNT(DISTINCT cii.ingredient.id)
+        """)
+    Optional<CartItem> findByCartAndIngredients(
+            Integer cartId,
+            List<Integer> ingredients,
+            Integer ingredientsCount
+    );
+
+    @Modifying
+    @Query(value = """
+        INSERT INTO cart_item(quantity ,product_item_id, cart_id)
+        VALUES
+        (1, :productItemId, :cartId)
+        """, nativeQuery = true)
+    void create(Integer productItemId, Integer cartId);
 }

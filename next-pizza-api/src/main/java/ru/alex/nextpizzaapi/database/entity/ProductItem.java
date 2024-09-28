@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "cartItems")
 @ToString(exclude = "cartItems")
+@Builder
 public class ProductItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

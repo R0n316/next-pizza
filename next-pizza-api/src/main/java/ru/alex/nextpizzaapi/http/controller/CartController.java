@@ -1,9 +1,11 @@
 package ru.alex.nextpizzaapi.http.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
+import ru.alex.nextpizzaapi.dto.cartItem.CartItemCreateDto;
 import ru.alex.nextpizzaapi.dto.cartItem.CartItemUpdateDto;
 import ru.alex.nextpizzaapi.service.CartService;
 
@@ -33,5 +35,12 @@ public class CartController {
     public CartReadDto deleteCartItem(@PathVariable("id") Integer id,
                                       HttpServletRequest request) {
         return cartService.deleteItem(id, request);
+    }
+
+    @PostMapping
+    public CartReadDto addCartItem(@RequestBody CartItemCreateDto cartDto,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
+        return cartService.addItem(cartDto, request, response);
     }
 }
