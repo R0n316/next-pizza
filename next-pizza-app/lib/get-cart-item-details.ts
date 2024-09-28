@@ -7,10 +7,11 @@ export const getCartItemDetails = (
     pizzaSize: PizzaSize
 ): string => {
     const details = [];
-    if(pizzaSize !== undefined && pizzaType !== undefined) {
+    if(pizzaSize !== undefined && pizzaSize !== null && pizzaType !== undefined && pizzaType !== null) {
         const typeName = mapPizzaType[pizzaType];
         details.push(`${typeName} ${pizzaSize} см`);
     }
+
 
     if(ingredients) {
         details.push(...ingredients.map(ingredient => ingredient.name));

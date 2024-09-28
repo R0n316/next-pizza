@@ -1,6 +1,7 @@
 import {Container, Filters, Title, TopBar} from "@/components/shared";
 import {Api} from "@/services/api-client";
 import {ProductsGroupList} from "@/components/shared/products-group-list";
+import {Suspense} from "react";
 
 export default async function Home() {
     const categories = await Api.categories.getAll();
@@ -15,7 +16,9 @@ export default async function Home() {
 
                   {/*Фильтрация*/}
                   <div className={'w-[250px]'}>
-                      <Filters/>
+                      <Suspense>
+                          <Filters/>
+                      </Suspense>
                   </div>
 
                   {/*Список товаров*/}
