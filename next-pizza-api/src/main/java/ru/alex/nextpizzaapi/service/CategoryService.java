@@ -6,9 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.alex.nextpizzaapi.database.repository.CategoryRepository;
 import ru.alex.nextpizzaapi.database.repository.ProductRepository;
 import ru.alex.nextpizzaapi.dto.category.CategoryReadDto;
+import ru.alex.nextpizzaapi.dto.category.ProductFilter;
 import ru.alex.nextpizzaapi.mapper.CategoryReadMapper;
+import ru.alex.nextpizzaapi.utils.CategoryUtils;
 
 import java.util.List;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -26,12 +29,14 @@ public class CategoryService {
         this.categoryReadMapper = categoryReadMapper;
     }
 
-    public List<CategoryReadDto> findAll() {
+    public List<CategoryReadDto> findAll(ProductFilter productFilter) {
         productRepository.findAllWithProductItems();
         productRepository.findAllWithIngredients();
-        return categoryRepository.findAllWithProducts()
+        List<CategoryReadDto> categories = categoryRepository.findAllWithProducts()
                 .stream()
                 .map(categoryReadMapper::toDto)
                 .toList();
+
+        return CategoryUtils.filterCategories(categories, productFilter);
     }
 }
