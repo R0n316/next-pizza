@@ -1,10 +1,10 @@
 import {Container, Filters, Title, TopBar} from "@/components/shared";
-import {Api} from "@/services/api-client";
 import {ProductsGroupList} from "@/components/shared/products-group-list";
 import {Suspense} from "react";
+import {findPizzas, GetSearchParams} from "@/lib/find-pizzas";
 
-export default async function Home() {
-    const categories = await Api.categories.getAll();
+export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
+    const categories = await findPizzas(searchParams);
   return (
       <>
           <Container className={'mt-10'}>

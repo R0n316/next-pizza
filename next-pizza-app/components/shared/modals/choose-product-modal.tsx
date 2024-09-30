@@ -3,12 +3,13 @@
 import {Dialog} from "@/components/ui";
 import {Product} from "@/services/model";
 import {cn} from "@/lib/utils";
-import {DialogContent, DialogTitle} from "@/components/ui/dialog";
+import {DialogContent} from "@/components/ui/dialog";
 import {ChooseProductForm} from "@/components/shared";
 import {useRouter} from "next/navigation";
 import {ChoosePizzaForm} from "@/components/shared/choose-pizza-form";
 import {useCartStore} from "@/store";
 import toast from "react-hot-toast";
+import React from "react";
 
 interface Props {
     product: Product;
@@ -39,7 +40,6 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
 
     return (
         <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
-            <DialogTitle/>
             <DialogContent
                 className={cn(
                 'p-0 w-[1060px] max-w-[1060px] min-h-[500px] bg-white overflow-hidden',
