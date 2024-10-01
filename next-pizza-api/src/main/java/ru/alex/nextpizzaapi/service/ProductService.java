@@ -38,6 +38,9 @@ public class ProductService {
     }
 
     public ProductReadDto findById(Integer id) {
+        // N + 1 solving
+        productRepository.findAllWithProductItems();
+        productRepository.findAllWithIngredients();
         return productRepository.findById(id)
                 .map(productReadMapper::toDto)
                 .orElse(null);
@@ -45,6 +48,9 @@ public class ProductService {
 
 
     public List<ProductReadDto> getRecommendedProducts(Integer id) {
+        // N + 1 solving
+        productRepository.findAllWithProductItems();
+        productRepository.findAllWithIngredients();
         Optional<Product> productOptional = productRepository.findById(id);
         if(productOptional.isPresent()) {
             Product product = productOptional.get();
