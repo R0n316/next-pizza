@@ -9,7 +9,6 @@ import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
 import ru.alex.nextpizzaapi.dto.productItem.ProductItemReadDto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class CategoryUtils {
@@ -22,7 +21,7 @@ public class CategoryUtils {
                         filterProducts(category.products(), filter)
                 ))
                 .filter(category -> !category.products().isEmpty())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ProductReadDto> filterProducts(List<ProductReadDto> products, ProductFilter filter) {
@@ -34,10 +33,9 @@ public class CategoryUtils {
                         filterProductItems(product.items(), filter),
                         product.ingredients()
                 ))
-                // Фильтруем по ингредиентам
                 .filter(product -> filterIngredients(product.ingredients(), filter))
                 .filter(product -> !product.items().isEmpty())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ProductItemReadDto> filterProductItems(List<ProductItemReadDto> items, ProductFilter filter) {
@@ -50,15 +48,13 @@ public class CategoryUtils {
                 .filter(item -> (filter.sizes() == null || filter.sizes().isEmpty() || filter.sizes().contains(item.size())))
                 .filter(item -> (filter.priceFrom() == null || item.price() >= filter.priceFrom()))
                 .filter(item -> (filter.priceTo() == null || item.price() <= filter.priceTo()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // Добавляем метод фильтрации по ингредиентам
     private boolean filterIngredients(List<IngredientReadDto> ingredients, ProductFilter filter) {
         if (filter.ingredients() == null || filter.ingredients().isEmpty()) {
-            return true; // Если ингредиенты не заданы, не фильтруем
+            return true;
         }
-        // Проверяем, содержит ли продукт хотя бы один ингредиент из фильтра
         return ingredients.stream()
                 .map(IngredientReadDto::id)
                 .anyMatch(filter.ingredients()::contains);

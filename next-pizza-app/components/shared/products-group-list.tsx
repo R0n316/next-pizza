@@ -5,10 +5,11 @@ import {Title} from "@/components/shared/title";
 import {cn} from "@/lib/utils";
 import {ProductCard} from "@/components/shared/product-card";
 import {useCategoryStore} from "@/store/category";
+import {Product} from "@/services/model";
 
 interface Props {
     title: string;
-    items: any[];
+    items: Product[];
     categoryId: number;
     className?: string;
     listClassName?: string;
@@ -46,6 +47,7 @@ export const ProductsGroupList: React.FC<Props> = (
                         name={product.name}
                         price={product.items[0].price}
                         imageUrl={product.imageUrl}
+                        ingredients={product.ingredients}
                     />
                 ))}
             </div>
