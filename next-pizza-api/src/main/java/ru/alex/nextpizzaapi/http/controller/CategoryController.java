@@ -22,4 +22,9 @@ public class CategoryController {
     public List<CategoryReadDto> findAll(@ModelAttribute ProductFilter productFilter) {
         return categoryService.findAll(productFilter);
     }
+
+    @GetMapping("/{id}/recommended")
+    public CategoryReadDto recommendedProducts(@PathVariable("id") Integer id) {
+        return categoryService.getRecommendedProducts(id);
+    }
 }
