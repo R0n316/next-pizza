@@ -13,3 +13,7 @@ export const getAll = async (queryParams: QueryParams): Promise<Category[]> => {
         return [];
     }
 }
+
+export const getRecommendedProducts = async (id: number): Promise<Category> => {
+    return (await axiosInstance.get<Category>(`${ApiRoutes.CATEGORIES}/${id}/recommended`, {params: {id}})).data;
+}
