@@ -27,4 +27,9 @@ public class ProductController {
     public ProductReadDto findById(@PathVariable("id") Integer id) {
         return productService.findById(id);
     }
+
+    @GetMapping("/{id}/recommended")
+    public List<ProductReadDto> recommendedProducts(@PathVariable("id") Integer id) {
+        return productService.getRecommendedProducts(id);
+    }
 }

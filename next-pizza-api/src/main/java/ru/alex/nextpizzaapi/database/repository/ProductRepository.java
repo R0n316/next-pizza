@@ -29,4 +29,15 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
         LEFT JOIN FETCH ip.ingredient
         """)
     List<Product> findAllWithIngredients();
+
+    @Query("""
+        SELECT p
+        FROM Product p
+        LEFT JOIN FETCH p.productItems pi
+        WHERE p.category.id = :categoryId
+        GROUP BY p.id, pi.product.id, pi.id
+        ORDER BY AVG(pi.price) DESC, p.id ASC
+        """)
+    List<Product> getRecommendedProducts(Integer categoryId);
+
 }

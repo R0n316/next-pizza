@@ -30,6 +30,7 @@ public class CategoryUtils {
                         product.id(),
                         product.name(),
                         product.imageUrl(),
+                        product.categoryId(),
                         filterProductItems(product.items(), filter),
                         product.ingredients()
                 ))

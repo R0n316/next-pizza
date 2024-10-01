@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.alex.nextpizzaapi.database.entity.Product;
 import ru.alex.nextpizzaapi.database.repository.ProductRepository;
 import ru.alex.nextpizzaapi.dto.product.ProductPreviewDto;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
@@ -11,6 +12,7 @@ import ru.alex.nextpizzaapi.mapper.ProductPreviewMapper;
 import ru.alex.nextpizzaapi.mapper.ProductReadMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,5 +41,18 @@ public class ProductService {
         return productRepository.findById(id)
                 .map(productReadMapper::toDto)
                 .orElse(null);
+    }
+
+
+    public List<ProductReadDto> getRecommendedProducts(Integer id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(productOptional.isPresent()) {
+            Product product = productOptional.get();
+            return productRepository.getRecommendedProducts(product.getCategory().getId())
+                    .stream()
+                    .map(productReadMapper::toDto)
+                    .toList();
+        }
+        return null;
     }
 }

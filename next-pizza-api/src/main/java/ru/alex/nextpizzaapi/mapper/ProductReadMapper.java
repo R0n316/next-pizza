@@ -39,6 +39,7 @@ public class ProductReadMapper implements Mapper<Product, ProductReadDto> {
                 entity.getId(),
                 entity.getName(),
                 entity.getImageUrl(),
+                entity.getCategory().getId(),
                 productItems,
                 ingredients
         );

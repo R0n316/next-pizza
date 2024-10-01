@@ -9,6 +9,7 @@ public record ProductReadDto(
         Integer id,
         String name,
         String imageUrl,
+        Integer categoryId,
         List<ProductItemReadDto> items,
         List<IngredientReadDto> ingredients
 ) {
