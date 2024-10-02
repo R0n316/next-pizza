@@ -1,9 +1,25 @@
-import {CheckoutItem, CheckoutItemDetails, Container, Title, WhiteBlock} from "@/components/shared";
-import {Button, Input} from "@/components/ui";
+'use client';
+
+import {CheckoutItem, CheckoutSidebar, Container, Title, WhiteBlock} from "@/components/shared";
+import {Input} from "@/components/ui";
 import {Textarea} from "@/components/ui/textarea";
-import {ArrowRight, Package, Percent, Truck} from "lucide-react";
+import {useCart} from "@/hooks";
+import {getCartItemDetails} from "@/lib";
+import {PizzaSize, PizzaType} from "@/constants/pizza";
 
 export default function CheckoutPage() {
+    const {
+        totalAmount,
+        items,
+        updateItemQuantity,
+        removeCartItem
+    } = useCart();
+
+    const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
+        const newQuantity = type === 'plus'? quantity + 1 : quantity - 1;
+        updateItemQuantity(id, newQuantity);
+    }
+
     return (
         <Container className={'mt-5'}>
             <Title text={'Оформление заказа'} className={'font-extrabold mb-8 text-[36px]'}/>
@@ -13,22 +29,28 @@ export default function CheckoutPage() {
                 <div className={'flex flex-col gap-10 flex-1 mb-20'}>
                     <WhiteBlock title={'1. Корзина'}>
                         <div className={'flex flex-col gap-5'}>
-                            <CheckoutItem
-                                id={0}
-                                imageUrl={'https://media.dodostatic.net/image/r:292x292/11EE7D61706D472F9A5D71EB94149304.avif'}
-                                details={'Пицца Чоризо Фреш с дополнительными добавками (маргарита, соус, капричоза)'}
-                                name={'Чоризо Фреш'}
-                                price={299}
-                                quantity={3}
-                            />
-                            <CheckoutItem
-                                id={1}
-                                imageUrl={'https://media.dodostatic.net/image/r:292x292/11EE7D612FC7B7FCA5BE822752BEE1E5.avif'}
-                                details={'Пицца Пепперони Фреш с дополнительными добавками (маргарита, соус, капричоза)'}
-                                name={'Пепперони Фреш'}
-                                price={399}
-                                quantity={2}
-                            />
+                            {
+                                items.map(item => (
+                                    <CheckoutItem
+                                        key={item.id}
+                                        id={item.id}
+                                        imageUrl={item.imageUrl}
+                                        details={
+                                            getCartItemDetails(
+                                                item.ingredients,
+                                                item.pizzaType as PizzaType,
+                                                item.pizzaSize as PizzaSize
+                                            )
+                                        }
+                                        name={item.name}
+                                        price={item.price}
+                                        quantity={item.quantity}
+                                        disabled={item.disabled}
+                                        onClickCountButton={(type) => onClickCountButton(item.id, item.quantity, type)}
+                                        onClickRemove={() => removeCartItem(item.id)}
+                                    />
+                                ))
+                            }
                         </div>
                     </WhiteBlock>
 
@@ -56,46 +78,7 @@ export default function CheckoutPage() {
 
                 {/*Правая часть*/}
                 <div className={'w-[450px]'}>
-                    <WhiteBlock className={'p-6 sticky top-4'}>
-                        <div className={'flex flex-col gap-1'}>
-                            <span className={'text-xl'}>Итого:</span>
-                            <span className={'text-[34px] font-extrabold'}>2365 ₽</span>
-                        </div>
-                        <CheckoutItemDetails
-                            title={
-                            <div className={'flex items-center'}>
-                                <Package size={18} className={'mr-2 text-gray-300'}/>
-                                Стоимость товаров:
-                            </div>
-                        }
-                            value={'2005 ₽'}
-                        />
-                        <CheckoutItemDetails
-                            title={
-                                <div className={'flex items-center'}>
-                                    <Percent size={18} className={'mr-2 text-gray-300'}/>
-                                    Налоги:
-                                </div>
-                            }
-                            value={'240 ₽'}
-                        />
-                        <CheckoutItemDetails
-                            title={
-                                <div className={'flex items-center'}>
-                                    <Truck size={18} className={'mr-2 text-gray-300'}/>
-                                    Налоги:
-                                </div>
-                            }
-                            value={'120 ₽'}
-                        />
-                        <Button
-                            type={'submit'}
-                            className={'w-full h-14 rounded-2xl mt-6 text-base font-bold'}
-                        >
-                            Перейти к оплате
-                            <ArrowRight className={'w-5 ml-2'}/>
-                        </Button>
-                    </WhiteBlock>
+                    <CheckoutSidebar totalAmount={totalAmount} />
                 </div>
             </div>
 
