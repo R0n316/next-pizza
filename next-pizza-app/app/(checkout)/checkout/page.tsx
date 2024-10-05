@@ -12,13 +12,15 @@ import {useCart} from "@/hooks";
 import {FormProvider, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod';
 import {CheckoutFormData, checkoutFormSchema} from "@/constants";
+import {useEffect, useState} from "react";
 
 export default function CheckoutPage() {
     const {
         totalAmount,
         items,
         updateItemQuantity,
-        removeCartItem
+        removeCartItem,
+        loading
     } = useCart();
 
     const form = useForm<CheckoutFormData>({
@@ -32,6 +34,14 @@ export default function CheckoutPage() {
             comment: ''
         }
     });
+
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    useEffect(() => {
+        if(!loading) {
+            setInitialLoading(false);
+        }
+    }, [loading])
 
     const onSubmit: SubmitHandler<CheckoutFormData> = (data) => {
         console.log(data);
@@ -55,16 +65,20 @@ export default function CheckoutPage() {
                                 items={items}
                                 onClickCountButton={onClickCountButton}
                                 onClickRemoveCartItem={removeCartItem}
+                                loading={initialLoading}
                             />
 
-                            <CheckoutPersonalInfo/>
+                            <CheckoutPersonalInfo className={initialLoading ? 'opacity-40 pointer-events-none' : undefined}/>
 
-                            <CheckoutDeliveryAddress/>
+                            <CheckoutDeliveryAddress className={initialLoading ? 'opacity-40 pointer-events-none' : undefined}/>
                         </div>
 
                         {/*Правая часть*/}
                         <div className={'w-[450px]'}>
-                            <CheckoutSidebar totalAmount={totalAmount}/>
+                            <CheckoutSidebar
+                                totalAmount={totalAmount}
+                                loading={initialLoading}
+                            />
                         </div>
                     </div>
                 </form>
