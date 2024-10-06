@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оплатите заказ</title>
+</head>
+<body>
+<!--TODO стилизовать письмо-->
+<h3 th:text="'Оплатите заказа на сумму ' + ${totalAmount} + '₽'"></h3>
+<span>Перейдите по <a th:href="${paymentLink}">этой ссылке </a> для оплаты заказа</span>
+</body>
+</html>

@@ -12,11 +12,14 @@ import ru.alex.nextpizzaapi.database.repository.CartItemRepository;
 import ru.alex.nextpizzaapi.database.repository.CartRepository;
 import ru.alex.nextpizzaapi.database.repository.OrderRepository;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
+import ru.alex.nextpizzaapi.dto.email.EmailDto;
 import ru.alex.nextpizzaapi.dto.order.OrderCreateDto;
 import ru.alex.nextpizzaapi.exception.CartNotFoundException;
 import ru.alex.nextpizzaapi.exception.CartTokenNotFoundException;
 import ru.alex.nextpizzaapi.mapper.cart.CartReadMapper;
 import ru.alex.nextpizzaapi.mapper.order.OrderCreateMapper;
+
+import java.util.Map;
 
 import static ru.alex.nextpizzaapi.utils.CartUtils.getCartToken;
 
@@ -72,11 +75,17 @@ public class OrderService {
         cartRepository.save(cart);
         Order savedOrder = orderRepository.save(order);
 
+        String paymentLink = "www.youtube.com";
+
         emailService.sendEmail(
-                orderCreateDto.email(),
-                "Next pizza / Оплатите заказ #" + savedOrder.getId(),
-                "<h3>Заказ #" + savedOrder.getId() + "</h3><br><span>Оплатите заказ на сумму " +
-                        order.getTotalAmount() + ". Перейдите <a href=\"www.youtube.com\">этой ссылке</a> для оплаты заказа.</span>"
+                new EmailDto(
+                        orderCreateDto.email(),
+                        "Next pizza / Оплатите заказ #" + savedOrder.getId(),
+                        "email.html",
+                        Map.of("orderId", savedOrder.getId(),
+                                "totalAmount", savedOrder.getTotalAmount(),
+                                "paymentLink", paymentLink)
+                        )
                 );
         return "https://yandex.ru";
         // TODO сделать создание ссылки оплаты
