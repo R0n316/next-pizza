@@ -1,4 +1,4 @@
-package ru.alex.nextpizzaapi.mapper;
+package ru.alex.nextpizzaapi.mapper.cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -6,6 +6,8 @@ import ru.alex.nextpizzaapi.database.entity.Cart;
 import ru.alex.nextpizzaapi.database.entity.User;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
 import ru.alex.nextpizzaapi.dto.cartItem.CartItemReadDto;
+import ru.alex.nextpizzaapi.mapper.Mapper;
+import ru.alex.nextpizzaapi.mapper.cartItem.CartItemReadMapper;
 
 import java.util.List;
 import java.util.Optional;

@@ -51,4 +51,9 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 
     @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId ORDER BY ci.createdAt DESC")
     List<CartItem> findByCart(Integer cartId);
+
+
+    @Query("DELETE FROM CartItem ci WHERE ci.cart.id = :cartId")
+    @Modifying
+    void deleteByCart(Integer cartId);
 }

@@ -1,10 +1,12 @@
-package ru.alex.nextpizzaapi.mapper;
+package ru.alex.nextpizzaapi.mapper.category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.alex.nextpizzaapi.database.entity.Category;
 import ru.alex.nextpizzaapi.dto.category.CategoryReadDto;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
+import ru.alex.nextpizzaapi.mapper.Mapper;
+import ru.alex.nextpizzaapi.mapper.product.ProductReadMapper;
 
 import java.util.List;
 

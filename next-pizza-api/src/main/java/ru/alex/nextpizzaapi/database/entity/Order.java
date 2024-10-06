@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import ru.alex.nextpizzaapi.dto.cartItem.CartItemReadDto;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "items", callSuper = false)
 @ToString(exclude = "items")
+@Builder
 public class Order extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,7 @@ public class Order extends AuditableEntity {
     private String token;
 
     @Column(name = "total_amount")
-    private int totalAmount;
+    private Float totalAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -36,7 +38,7 @@ public class Order extends AuditableEntity {
     private Integer paymentId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<CartItem> items;
+    private List<CartItemReadDto> items;
 
     @Column(name = "full_name")
     private String fullName;
@@ -44,4 +46,5 @@ public class Order extends AuditableEntity {
     private String email;
     private String phone;
     private String comment;
+    private String address;
 }

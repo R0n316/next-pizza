@@ -23,5 +23,4 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Modifying
     @Query("UPDATE Cart c SET c.totalAmount = :totalAmount WHERE c.id = :id")
     void updateTotalAmount(Integer totalAmount, Integer id);
-
 }

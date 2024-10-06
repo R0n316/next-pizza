@@ -9,8 +9,8 @@ import ru.alex.nextpizzaapi.database.repository.ProductRepository;
 import ru.alex.nextpizzaapi.dto.category.CategoryReadDto;
 import ru.alex.nextpizzaapi.dto.category.ProductFilter;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
-import ru.alex.nextpizzaapi.mapper.CategoryReadMapper;
-import ru.alex.nextpizzaapi.mapper.ProductReadMapper;
+import ru.alex.nextpizzaapi.mapper.category.CategoryReadMapper;
+import ru.alex.nextpizzaapi.mapper.product.ProductReadMapper;
 import ru.alex.nextpizzaapi.utils.CategoryUtils;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.alex.nextpizzaapi.mapper;
+package ru.alex.nextpizzaapi.mapper.cartItem;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,11 +7,14 @@ import ru.alex.nextpizzaapi.database.entity.Ingredient;
 import ru.alex.nextpizzaapi.dto.cartItem.CartItemReadDto;
 import ru.alex.nextpizzaapi.dto.ingredient.IngredientPreviewDto;
 import ru.alex.nextpizzaapi.dto.productItem.ProductItemCartDto;
+import ru.alex.nextpizzaapi.mapper.ingredient.IngredientPreviewMapper;
+import ru.alex.nextpizzaapi.mapper.Mapper;
+import ru.alex.nextpizzaapi.mapper.productItem.ProductItemCartMapper;
 
 import java.util.List;
 
 @Component
-public class CartItemReadMapper implements Mapper<CartItem, CartItemReadDto>{
+public class CartItemReadMapper implements Mapper<CartItem, CartItemReadDto> {
     private final ProductItemCartMapper productItemCartMapper;
     private final IngredientPreviewMapper ingredientPreviewMapper;
 

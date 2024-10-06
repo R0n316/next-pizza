@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alex.nextpizzaapi.database.repository.IngredientRepository;
 import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
-import ru.alex.nextpizzaapi.mapper.IngredientReadMapper;
+import ru.alex.nextpizzaapi.mapper.ingredient.IngredientReadMapper;
 
 import java.util.List;
 

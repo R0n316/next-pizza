@@ -1,4 +1,4 @@
-package ru.alex.nextpizzaapi.mapper;
+package ru.alex.nextpizzaapi.mapper.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -6,6 +6,9 @@ import ru.alex.nextpizzaapi.database.entity.Product;
 import ru.alex.nextpizzaapi.dto.ingredient.IngredientReadDto;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
 import ru.alex.nextpizzaapi.dto.productItem.ProductItemReadDto;
+import ru.alex.nextpizzaapi.mapper.Mapper;
+import ru.alex.nextpizzaapi.mapper.ingredient.IngredientReadMapper;
+import ru.alex.nextpizzaapi.mapper.productItem.ProductItemReadMapper;
 
 import java.util.Comparator;
 import java.util.List;

@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.alex.nextpizzaapi.database.repository.ProductRepository;
 import ru.alex.nextpizzaapi.dto.product.ProductPreviewDto;
 import ru.alex.nextpizzaapi.dto.product.ProductReadDto;
-import ru.alex.nextpizzaapi.mapper.ProductPreviewMapper;
-import ru.alex.nextpizzaapi.mapper.ProductReadMapper;
+import ru.alex.nextpizzaapi.mapper.product.ProductPreviewMapper;
+import ru.alex.nextpizzaapi.mapper.product.ProductReadMapper;
 
 import java.util.List;
 
