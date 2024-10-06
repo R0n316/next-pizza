@@ -2,7 +2,6 @@ package ru.alex.nextpizzaapi.http.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +23,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createOrder(@RequestBody OrderCreateDto orderCreateDto,
+    public ResponseEntity<String> createOrder(@RequestBody OrderCreateDto orderCreateDto,
                                                   HttpServletRequest request) {
-        orderService.create(orderCreateDto, request);
-        return new ResponseEntity<>(OK);
+        return new ResponseEntity<>(orderService.create(orderCreateDto, request), OK);
     }
 }

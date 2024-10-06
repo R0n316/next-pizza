@@ -48,3 +48,11 @@ export interface CartItemCreateDto {
     productItemId: number;
     ingredientIds?: number[];
 }
+
+export interface OrderData {
+    fullName: string;
+    email: string;
+    phone: string;
+    comment?: string;
+    address: string;
+}

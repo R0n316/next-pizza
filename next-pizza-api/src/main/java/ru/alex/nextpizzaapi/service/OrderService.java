@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alex.nextpizzaapi.database.entity.Cart;
 import ru.alex.nextpizzaapi.database.entity.Order;
+import ru.alex.nextpizzaapi.database.entity.OrderStatus;
 import ru.alex.nextpizzaapi.database.repository.CartItemRepository;
 import ru.alex.nextpizzaapi.database.repository.CartRepository;
 import ru.alex.nextpizzaapi.database.repository.OrderRepository;
@@ -22,17 +23,20 @@ import static ru.alex.nextpizzaapi.utils.CartUtils.getCartToken;
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
+    private final EmailService emailService;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderCreateMapper orderCreateMapper;
     private final CartReadMapper cartReadMapper;
     @Autowired
-    public OrderService(OrderRepository orderRepository,
+    public OrderService(EmailService emailService,
+                        OrderRepository orderRepository,
                         OrderCreateMapper orderCreateMapper,
                         CartRepository cartRepository,
                         CartItemRepository cartItemRepository,
                         CartReadMapper cartReadMapper) {
+        this.emailService = emailService;
         this.orderRepository = orderRepository;
         this.orderCreateMapper = orderCreateMapper;
         this.cartRepository = cartRepository;
@@ -41,7 +45,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void create(OrderCreateDto orderCreateDto, HttpServletRequest request) {
+    public String create(OrderCreateDto orderCreateDto, HttpServletRequest request) {
         // Получение токена из cookies
         String token = getCartToken(request.getCookies())
                 .map(Cookie::getValue)
@@ -59,12 +63,22 @@ public class OrderService {
         Order order = orderCreateMapper.toEntity(orderCreateDto);
         order.setToken(token);
         order.setItems(cartReadDto.items());
+        order.setTotalAmount(cartReadDto.totalAmount());
+        order.setOrderStatus(OrderStatus.PENDING);
         // очистка корзины со всеми связанными с ней сущностями
         cartItemRepository.deleteByCart(cart.getId());
         cart.setTotalAmount(0);
         // сохранение заказа в бд
         cartRepository.save(cart);
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+        emailService.sendEmail(
+                orderCreateDto.email(),
+                "Next pizza / Оплатите заказ #" + savedOrder.getId(),
+                "<h3>Заказ #" + savedOrder.getId() + "</h3><br><span>Оплатите заказ на сумму " +
+                        order.getTotalAmount() + ". Перейдите <a href=\"www.youtube.com\">этой ссылке</a> для оплаты заказа.</span>"
+                );
+        return "https://yandex.ru";
         // TODO сделать создание ссылки оплаты
     }
 }

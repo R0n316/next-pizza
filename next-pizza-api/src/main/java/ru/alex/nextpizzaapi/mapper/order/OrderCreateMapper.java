@@ -12,8 +12,6 @@ public class OrderCreateMapper implements Mapper<Order, OrderCreateDto> {
     public Order toEntity(OrderCreateDto dto) {
 
         return Order.builder()
-                .totalAmount(dto.totalAmount())
-                .orderStatus(dto.status())
                 .fullName(dto.fullName())
                 .email(dto.email())
                 .phone(dto.phone())
