@@ -17,6 +17,7 @@ public class OrderCreateMapper implements Mapper<Order, OrderCreateDto> {
                 .phone(dto.phone())
                 .comment(dto.comment())
                 .address(dto.address())
+                .totalAmount(dto.totalAmount())
                 .build();
     }
 }

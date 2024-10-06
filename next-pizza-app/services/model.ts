@@ -55,4 +55,5 @@ export interface OrderData {
     phone: string;
     comment?: string;
     address: string;
+    totalAmount: number;
 }

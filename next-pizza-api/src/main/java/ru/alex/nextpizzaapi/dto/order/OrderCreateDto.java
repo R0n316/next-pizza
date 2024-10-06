@@ -5,6 +5,7 @@ public record OrderCreateDto(
         String email,
         String phone,
         String comment,
-        String address
+        String address,
+        Float totalAmount
 ) {
 }

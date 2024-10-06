@@ -28,7 +28,7 @@ public class Order extends AuditableEntity {
     private String token;
 
     @Column(name = "total_amount")
-    private Integer totalAmount;
+    private Float totalAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

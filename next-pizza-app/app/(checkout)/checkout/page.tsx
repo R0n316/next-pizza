@@ -16,6 +16,7 @@ import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import {OrderData} from "@/services/model";
 import {Api} from "@/services/api-client";
+import {DELIVERY_PRICE, VAT} from "@/constants/order";
 
 export default function CheckoutPage() {
     const {
@@ -25,6 +26,9 @@ export default function CheckoutPage() {
         removeCartItem,
         loading
     } = useCart();
+
+    const vatPrice = (totalAmount * VAT) / 100;
+    const totalPrice = totalAmount + DELIVERY_PRICE + vatPrice;
 
     const form = useForm<CheckoutFormData>({
         resolver: zodResolver(checkoutFormSchema),
@@ -51,10 +55,12 @@ export default function CheckoutPage() {
         try {
             setSubmitting(true);
             const orderData: OrderData = {
-                fullName: data.firstName + ' ' + data.lastName,                email: data.email,
+                fullName: data.firstName + ' ' + data.lastName,
+                email: data.email,
                 phone: data.phone,
                 comment: data.comment,
-                address: data.address
+                address: data.address,
+                totalAmount: totalPrice
             }
             const url = await Api.order.create(orderData);
             toast.success('Заказ успешно оформлен! 📝 Переход на оплату...', {
@@ -103,6 +109,8 @@ export default function CheckoutPage() {
                             <CheckoutSidebar
                                 totalAmount={totalAmount}
                                 loading={initialLoading || submitting}
+                                vatPrice={vatPrice}
+                                totalPrice={totalPrice}
                             />
                         </div>
                     </div>

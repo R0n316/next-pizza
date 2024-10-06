@@ -66,7 +66,6 @@ public class OrderService {
         Order order = orderCreateMapper.toEntity(orderCreateDto);
         order.setToken(token);
         order.setItems(cartReadDto.items());
-        order.setTotalAmount(cartReadDto.totalAmount());
         order.setOrderStatus(OrderStatus.PENDING);
         // очистка корзины со всеми связанными с ней сущностями
         cartItemRepository.deleteByCart(cart.getId());
@@ -87,7 +86,7 @@ public class OrderService {
                                 "paymentLink", paymentLink)
                         )
                 );
-        return "https://yandex.ru";
+        return "https://mail.google.com/";
         // TODO сделать создание ссылки оплаты
     }
 }
