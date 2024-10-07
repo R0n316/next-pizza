@@ -1,0 +1,47 @@
+'use client';
+
+import {Container, FormTitleInput, Title} from "@/components/shared";
+import {FormProvider, useForm} from "react-hook-form";
+import {OrderConfirmFormData, orderConfirmFormSchema} from "@/constants";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Button} from "@/components/ui";
+
+export default function OrderConfirmPage({params: {id}}: {params: {id: string}}) {
+    const form = useForm<OrderConfirmFormData>({
+        resolver: zodResolver(orderConfirmFormSchema),
+        defaultValues: {
+            cardNumberPart: '',
+            cardExpirationDate: '',
+            cardCvc: ''
+        }
+    });
+    return (
+        <Container className={'mt-5'}>
+            <Title text={`Оплата заказа #${id}`} className={'font-extrabold mb-8 text-[36px]'}/>
+            <div className={'flex justify-center items-center'}>
+                <div className={'bg-white rounded-3xl w-[674px] h-[490px]'}>
+                    <div className={'flex items-center justify-center pt-7 pr-5 pl-5 pb-5 border-b border-gray-100'}>
+                        <Title text={'Реквизиты оплаты'} className={'font-extrabold'}/>
+                    </div>
+                    <div className={'px-9 pt-10'}>
+                        <FormProvider {...form}>
+                            <FormTitleInput name={'cardNumberPart'} title={'Номер карты'} titleClassName={'mb-1'}/>
+                            <div className={'flex justify-between mt-10'}>
+                                <FormTitleInput name={'cardExpirationDate'} title={'Месяц / год'}/>
+                                <FormTitleInput name={'cardCvc'} title={'CVC / CVV код'}/>
+                            </div>
+                            <div className={'flex flex-col gap-5 mt-[40px]'}>
+                                <Button className={'w-full h-[50px]'}>
+                                    Перейти к оплате
+                                </Button>
+                                <Button className={'w-full h-[50px]'} variant={'outline'}>
+                                    Отменить заказ
+                                </Button>
+                            </div>
+                        </FormProvider>
+                    </div>
+                </div>
+            </div>
+        </Container>
+    )
+}
