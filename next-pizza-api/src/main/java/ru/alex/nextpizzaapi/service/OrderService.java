@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.alex.nextpizzaapi.database.entity.Cart;
 import ru.alex.nextpizzaapi.database.entity.Order;
 import ru.alex.nextpizzaapi.database.entity.OrderStatus;
@@ -14,6 +15,7 @@ import ru.alex.nextpizzaapi.database.repository.OrderRepository;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
 import ru.alex.nextpizzaapi.dto.email.EmailDto;
 import ru.alex.nextpizzaapi.dto.order.OrderCreateDto;
+import ru.alex.nextpizzaapi.dto.payment.PaymentDto;
 import ru.alex.nextpizzaapi.exception.CartNotFoundException;
 import ru.alex.nextpizzaapi.exception.CartTokenNotFoundException;
 import ru.alex.nextpizzaapi.mapper.cart.CartReadMapper;
@@ -21,6 +23,8 @@ import ru.alex.nextpizzaapi.mapper.order.OrderCreateMapper;
 
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static ru.alex.nextpizzaapi.utils.CartUtils.getCartToken;
 
 @Service
@@ -88,5 +92,32 @@ public class OrderService {
                 );
         return "https://mail.google.com/";
         // TODO сделать создание ссылки оплаты
+    }
+
+    @Transactional
+    public void payForOrder(PaymentDto paymentDto, Integer orderId, HttpServletRequest request) {
+        Order order = getOrder(orderId, request);
+        order.setOrderStatus(OrderStatus.SUCCEEDED);
+        order.setPaymentId(paymentDto.cardNumber());
+        orderRepository.save(order);
+    }
+
+    public void cancelOrder(Integer orderId, HttpServletRequest request) {
+        Order order = getOrder(orderId, request);
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        order.setPaymentId(null);
+        orderRepository.save(order);
+    }
+
+    private Order getOrder(Integer orderId, HttpServletRequest request) {
+        String token = getCartToken(request.getCookies())
+                .map(Cookie::getValue)
+                .orElseThrow(CartTokenNotFoundException::new);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        if(!order.getToken().equals(token)) {
+            throw new ResponseStatusException(FORBIDDEN);
+        }
+        return order;
     }
 }

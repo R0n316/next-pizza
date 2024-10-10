@@ -35,7 +35,7 @@ public class Order extends AuditableEntity {
     private OrderStatus orderStatus;
 
     @Column(name = "payment_id")
-    private Integer paymentId;
+    private String paymentId;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private List<CartItemReadDto> items;
