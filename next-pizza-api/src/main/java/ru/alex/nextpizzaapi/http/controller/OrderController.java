@@ -27,17 +27,17 @@ public class OrderController {
         return new ResponseEntity<>(orderService.create(orderCreateDto, request), OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> payForOrder(@PathVariable("id") Integer id,
+    @PatchMapping("/{secret}")
+    public ResponseEntity<HttpStatus> payForOrder(@PathVariable("secret") String secret,
                                                   @RequestBody PaymentDto paymentDto,
                                                   HttpServletRequest request) {
-        orderService.payForOrder(paymentDto, id, request);
+        orderService.payForOrder(paymentDto, secret, request);
         return new ResponseEntity<>(OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> cancelOrder(@PathVariable("id") Integer id, HttpServletRequest request) {
-        orderService.cancelOrder(id, request);
+    @DeleteMapping("/{secret}")
+    public ResponseEntity<HttpStatus> cancelOrder(@PathVariable("secret") String secret, HttpServletRequest request) {
+        orderService.cancelOrder(secret, request);
         return new ResponseEntity<>(OK);
     }
 }

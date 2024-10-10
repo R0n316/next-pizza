@@ -22,6 +22,7 @@ import ru.alex.nextpizzaapi.mapper.cart.CartReadMapper;
 import ru.alex.nextpizzaapi.mapper.order.OrderCreateMapper;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -69,6 +70,8 @@ public class OrderService {
         // Создание заказа
         Order order = orderCreateMapper.toEntity(orderCreateDto);
         order.setToken(token);
+        String secret = UUID.randomUUID().toString();
+        order.setSecret(secret);
         order.setItems(cartReadDto.items());
         order.setOrderStatus(OrderStatus.PENDING);
         // очистка корзины со всеми связанными с ней сущностями
@@ -78,7 +81,7 @@ public class OrderService {
         cartRepository.save(cart);
         Order savedOrder = orderRepository.save(order);
 
-        String paymentLink = "www.youtube.com";
+        String paymentLink = "/orders/" + secret;
 
         emailService.sendEmail(
                 new EmailDto(
@@ -87,33 +90,32 @@ public class OrderService {
                         "email.html",
                         Map.of("orderId", savedOrder.getId(),
                                 "totalAmount", savedOrder.getTotalAmount(),
-                                "paymentLink", paymentLink)
+                                "paymentLink", "http://localhost:3000" + paymentLink)
                         )
                 );
-        return "https://mail.google.com/";
-        // TODO сделать создание ссылки оплаты
+        return paymentLink;
     }
 
     @Transactional
-    public void payForOrder(PaymentDto paymentDto, Integer orderId, HttpServletRequest request) {
-        Order order = getOrder(orderId, request);
+    public void payForOrder(PaymentDto paymentDto, String orderSecret, HttpServletRequest request) {
+        Order order = getOrder(orderSecret, request);
         order.setOrderStatus(OrderStatus.SUCCEEDED);
         order.setPaymentId(paymentDto.cardNumber());
         orderRepository.save(order);
     }
 
-    public void cancelOrder(Integer orderId, HttpServletRequest request) {
-        Order order = getOrder(orderId, request);
+    public void cancelOrder(String orderSecret, HttpServletRequest request) {
+        Order order = getOrder(orderSecret, request);
         order.setOrderStatus(OrderStatus.CANCELLED);
         order.setPaymentId(null);
         orderRepository.save(order);
     }
 
-    private Order getOrder(Integer orderId, HttpServletRequest request) {
+    private Order getOrder(String orderSecret, HttpServletRequest request) {
         String token = getCartToken(request.getCookies())
                 .map(Cookie::getValue)
                 .orElseThrow(CartTokenNotFoundException::new);
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findBySecret(orderSecret)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         if(!order.getToken().equals(token)) {
             throw new ResponseStatusException(FORBIDDEN);

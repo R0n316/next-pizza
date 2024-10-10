@@ -47,4 +47,5 @@ public class Order extends AuditableEntity {
     private String phone;
     private String comment;
     private String address;
+    private String secret;
 }
