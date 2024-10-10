@@ -2,6 +2,7 @@ import React from 'react';
 import {ClearButton, ErrorText, RequiredSymbol} from "@/components/shared";
 import {Input} from "@/components/ui";
 import {useFormContext} from "react-hook-form";
+import {cn} from "@/lib/utils";
 
 interface Props extends React.InputHTMLAttributes<HTMLElement>{
     name: string;
@@ -31,7 +32,7 @@ export const FormInput: React.FC<Props> = ({className, name, label, required, ..
             )}
 
             <div className={'relative'}>
-                <Input className={'h-12 text-md'} {...register(name)} {...props}/>
+                <Input className={cn('h-12 text-md', className)} {...register(name)} {...props}/>
 
                 {value && <ClearButton onClick={onClickClear}/>}
             </div>
