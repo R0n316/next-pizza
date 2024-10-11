@@ -57,3 +57,8 @@ export interface OrderData {
     address: string;
     totalAmount: number;
 }
+
+export interface OrderPayment {
+    id: number;
+    totalAmount: number;
+}

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.alex.nextpizzaapi.dto.order.OrderCreateDto;
+import ru.alex.nextpizzaapi.dto.order.OrderPaymentDto;
 import ru.alex.nextpizzaapi.dto.payment.PaymentDto;
 import ru.alex.nextpizzaapi.service.OrderService;
 
@@ -25,6 +26,11 @@ public class OrderController {
     public ResponseEntity<String> createOrder(@RequestBody OrderCreateDto orderCreateDto,
                                                   HttpServletRequest request) {
         return new ResponseEntity<>(orderService.create(orderCreateDto, request), OK);
+    }
+
+    @GetMapping("/{secret}")
+    public OrderPaymentDto getOrder(@PathVariable("secret") String secret, HttpServletRequest request) {
+        return orderService.get(secret, request);
     }
 
     @PatchMapping("/{secret}")

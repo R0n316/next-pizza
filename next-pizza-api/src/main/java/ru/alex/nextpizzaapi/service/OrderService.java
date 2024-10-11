@@ -15,11 +15,13 @@ import ru.alex.nextpizzaapi.database.repository.OrderRepository;
 import ru.alex.nextpizzaapi.dto.cart.CartReadDto;
 import ru.alex.nextpizzaapi.dto.email.EmailDto;
 import ru.alex.nextpizzaapi.dto.order.OrderCreateDto;
+import ru.alex.nextpizzaapi.dto.order.OrderPaymentDto;
 import ru.alex.nextpizzaapi.dto.payment.PaymentDto;
 import ru.alex.nextpizzaapi.exception.CartNotFoundException;
 import ru.alex.nextpizzaapi.exception.CartTokenNotFoundException;
 import ru.alex.nextpizzaapi.mapper.cart.CartReadMapper;
 import ru.alex.nextpizzaapi.mapper.order.OrderCreateMapper;
+import ru.alex.nextpizzaapi.mapper.order.OrderPaymentMapper;
 
 import java.util.Map;
 import java.util.UUID;
@@ -37,19 +39,27 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderCreateMapper orderCreateMapper;
     private final CartReadMapper cartReadMapper;
+    private final OrderPaymentMapper orderPaymentMapper;
+
     @Autowired
     public OrderService(EmailService emailService,
                         OrderRepository orderRepository,
                         OrderCreateMapper orderCreateMapper,
                         CartRepository cartRepository,
                         CartItemRepository cartItemRepository,
-                        CartReadMapper cartReadMapper) {
+                        CartReadMapper cartReadMapper,
+                        OrderPaymentMapper orderPaymentMapper) {
         this.emailService = emailService;
         this.orderRepository = orderRepository;
         this.orderCreateMapper = orderCreateMapper;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartReadMapper = cartReadMapper;
+        this.orderPaymentMapper = orderPaymentMapper;
+    }
+
+    public OrderPaymentDto get(String orderSecret, HttpServletRequest request) {
+        return orderPaymentMapper.toDto(getOrder(orderSecret, request));
     }
 
     @Transactional
@@ -104,6 +114,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional
     public void cancelOrder(String orderSecret, HttpServletRequest request) {
         Order order = getOrder(orderSecret, request);
         order.setOrderStatus(OrderStatus.CANCELLED);

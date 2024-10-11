@@ -4,10 +4,13 @@ import {Container, FormTitleInput, Title} from "@/components/shared";
 import {FormProvider, useForm} from "react-hook-form";
 import {OrderConfirmFormData, orderConfirmFormSchema} from "@/constants";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Button} from "@/components/ui";
+import {Button, Skeleton} from "@/components/ui";
 import toast from "react-hot-toast";
+import {useOrder} from "@/hooks";
 
 export default function OrderConfirmPage({params: {id}}: {params: {id: string}}) {
+    const {order, loading} = useOrder(id);
+
     const form = useForm<OrderConfirmFormData>({
         resolver: zodResolver(orderConfirmFormSchema),
         defaultValues: {
@@ -30,7 +33,12 @@ export default function OrderConfirmPage({params: {id}}: {params: {id: string}})
     }
     return (
         <Container className={'mt-5'}>
-            <Title text={`Оплата заказа #${id} на сумму 1234 ₽`} className={'font-extrabold mb-8 text-[36px]'}/>
+            {
+                loading ?
+                    <Skeleton className={'h-[54px] w-full mb-8'}/> :
+                    <Title text={`Оплата заказа #${order?.id} на сумму ${order?.totalAmount} ₽`} className={'font-extrabold mb-8 text-[36px]'}/>
+            }
+
             <div className={'flex justify-center items-center'}>
                 <div className={'bg-white flex flex-col rounded-3xl w-[674px] min-h-[490px] pb-10'}>
                     <div className={'flex items-center justify-center pt-7 pr-5 pl-5 border-b border-gray-100'}>
