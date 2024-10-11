@@ -66,8 +66,10 @@ export default function CheckoutPage() {
             toast.success('Заказ успешно оформлен! 📝 Переход на оплату...', {
                 icon: '✅'
             });
-            if(url) {
-                location.href = url;
+            if (url) {
+                setTimeout(() => {
+                    location.href = url;
+                }, 1000);
             }
         } catch (err) {
             setSubmitting(false);

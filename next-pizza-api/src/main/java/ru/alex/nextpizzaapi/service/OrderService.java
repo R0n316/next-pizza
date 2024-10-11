@@ -97,7 +97,7 @@ public class OrderService {
                 new EmailDto(
                         orderCreateDto.email(),
                         "Next pizza / Оплатите заказ #" + savedOrder.getId(),
-                        "email.html",
+                        "confirm-order-email.html",
                         Map.of("orderId", savedOrder.getId(),
                                 "totalAmount", savedOrder.getTotalAmount(),
                                 "paymentLink", "http://localhost:3000" + paymentLink)
@@ -112,6 +112,19 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.SUCCEEDED);
         order.setPaymentId(paymentDto.cardNumber());
         orderRepository.save(order);
+
+        emailService.sendEmail(
+                new EmailDto(
+                        order.getEmail(),
+                        "Next pizza / Заказ #" + order.getId() + " оплачен",
+                        "succeeded-payment-email.html",
+                        Map.of(
+                                "orderId", order.getId(),
+                                "totalAmount", order.getTotalAmount(),
+                                "items", order.getItems()
+                        )
+                )
+        );
     }
 
     @Transactional
@@ -120,6 +133,15 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.CANCELLED);
         order.setPaymentId(null);
         orderRepository.save(order);
+
+        emailService.sendEmail(
+                new EmailDto(
+                        order.getEmail(),
+                        "Next pizza / Заказ #" + order.getId() + " отменён",
+                        "canceled-order-email.html",
+                        Map.of("orderId", order.getId())
+                )
+        );
     }
 
     private Order getOrder(String orderSecret, HttpServletRequest request) {

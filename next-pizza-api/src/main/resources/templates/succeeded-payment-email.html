@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оплатите заказ</title>
+</head>
+<body>
+<!--TODO стилизовать письмо-->
+<h2 th:text="'Заказ #' + ${orderId} + ' на сумму ' + ${totalAmount} + ' ₽ успешно оплачен 🎉'"></h2>
+<hr>
+<h3>Список товаров: </h3>
+<ul th:each="item:${items}">
+    <li th:text="${item.productItem.product.name} + ' | '
+    + ${item.productItem.price} +
+     ' ₽ x ' + ${item.quantity} + ' шт. = ' + ${item.productItem.price * item.quantity} + ' ₽'"></li>
+</ul>
+</body>
+</html>
