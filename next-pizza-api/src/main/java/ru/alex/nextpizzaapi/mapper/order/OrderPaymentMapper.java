@@ -11,7 +11,8 @@ public class OrderPaymentMapper implements Mapper<Order, OrderPaymentDto> {
     public OrderPaymentDto toDto(Order entity) {
         return new OrderPaymentDto(
                 entity.getId(),
-                entity.getTotalAmount()
+                entity.getTotalAmount(),
+                entity.getOrderStatus().toString()
         );
     }
 }

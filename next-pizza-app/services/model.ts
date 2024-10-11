@@ -61,4 +61,9 @@ export interface OrderData {
 export interface OrderPayment {
     id: number;
     totalAmount: number;
+    status: string;
+}
+
+export interface Payment {
+    cardNumber: string;
 }
