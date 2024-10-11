@@ -58,6 +58,11 @@ VALUES
 ('Чоризо фреш', 'https://media.dodostatic.net/image/r:584x584/11EE7D61706D472F9A5D71EB94149304.webp', 1);
 
 
+INSERT INTO product (name, image_url, category_id)
+VALUES
+('Сырники со сгущенным молоком', 'https://media.dodostatic.net/image/r:584x584/11EE7D61877A2EE09AA2178718EFB59C.avif', 2);
+
+
 INSERT INTO ingredient_product(product_id, ingredient_id)
 VALUES
 (18,1),
@@ -115,7 +120,8 @@ VALUES
 (14, 409),
 (15, 399),
 (16, 579),
-(17, 249);
+(17, 249),
+(21, 165);
 
 
 INSERT INTO cart(user_id, token, total_amount)

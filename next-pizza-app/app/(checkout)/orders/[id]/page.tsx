@@ -27,12 +27,12 @@ export default function OrderConfirmPage({params: {id}}: {params: {id: string}})
                 await Api.order.payForOrder({
                     cardNumber: data.cardNumber
                 }, id);
-                toast.success('Заказ успешно оплачен', {
+                toast.success('Заказ успешно оплачен! Информация отправлена на почту.', {
                     icon: '✅'
                 });
             } else {
                 await Api.order.cancelOrder(id);
-                toast.success('Заказ успешно отменён', {
+                toast.success('Заказ успешно отменён. Информация отправлена на почту.', {
                     icon: '✅'
                 });
             }

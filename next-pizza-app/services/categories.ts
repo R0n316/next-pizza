@@ -5,7 +5,6 @@ import {QueryParams} from "@/lib/find-pizzas";
 
 export const getAll = async (queryParams: QueryParams): Promise<Category[]> => {
     try {
-        console.log(queryParams);
         const response = await axiosInstance.get<Category[]>(ApiRoutes.CATEGORIES, {params: queryParams});
         return response.data;
     } catch (error) {
