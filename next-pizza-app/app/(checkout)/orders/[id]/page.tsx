@@ -36,7 +36,7 @@ export default function OrderConfirmPage({params: {id}}: {params: {id: string}})
                     icon: '✅'
                 });
             }
-            // перенаправляем пользователя на главную страницу через 2 секунды
+
             setTimeout(() => {
                 window.location.href = '/';
             }, 2000);
