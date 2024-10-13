@@ -23,8 +23,7 @@ public class VerificationCode {
 
     private String code;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
 
     @Column(name = "expires_at")
     private Instant expiresAt;

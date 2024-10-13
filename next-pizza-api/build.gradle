@@ -7,6 +7,8 @@ plugins {
 group = 'ru.alex'
 version = '0.0.1-SNAPSHOT'
 
+apply from: 'version.gradle'
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
@@ -29,6 +31,10 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation "com.auth0:java-jwt:${versions.jwt}"
+	testImplementation 'org.springframework.security:spring-security-test'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'

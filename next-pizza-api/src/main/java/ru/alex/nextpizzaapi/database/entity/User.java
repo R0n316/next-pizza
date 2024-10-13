@@ -1,15 +1,14 @@
 package ru.alex.nextpizzaapi.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
+@Builder
+@ToString(exclude = "orders")
+@EqualsAndHashCode(callSuper = false, exclude = "orders")
 @Entity
 @Table(name = "users")
 @Data
@@ -30,6 +29,9 @@ public class User extends AuditableEntity {
 
     @Column(name = "provider_id")
     private String providerId;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;

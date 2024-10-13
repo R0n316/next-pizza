@@ -1,3 +1,9 @@
+app:
+  jwt:
+    secret: next-pizza-secret
+    subject: User details
+    issuer: next pizza api
+
 spring:
   application:
     name: next-pizza-api

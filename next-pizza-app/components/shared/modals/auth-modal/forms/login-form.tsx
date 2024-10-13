@@ -3,7 +3,6 @@ import {FormProvider, useForm} from "react-hook-form";
 import {FormLoginData, formLoginSchema} from "@/components/shared/modals/auth-modal/forms/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {FormInput, Title} from "@/components/shared";
-import Image from "next/image";
 import {Button} from "@/components/ui";
 import toast from "react-hot-toast";
 
