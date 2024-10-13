@@ -7,29 +7,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alex.nextpizzaapi.dto.auth.AuthResponse;
+import ru.alex.nextpizzaapi.dto.user.UserLoginDto;
 import ru.alex.nextpizzaapi.dto.user.UserRegisterDto;
-import ru.alex.nextpizzaapi.service.JwtService;
-import ru.alex.nextpizzaapi.service.UserService;
+import ru.alex.nextpizzaapi.service.AuthService;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-     private final JwtService jwtService;
-     private final UserService userService;
+    private final AuthService authService;
 
     @Autowired
-    public AuthController(JwtService jwtService,
-                          UserService userService) {
-        this.jwtService = jwtService;
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> performRegistration(@RequestBody UserRegisterDto user) {
-        userService.register(user);
-        String token = jwtService.generateToken(user.email());
-        return new ResponseEntity<>(new AuthResponse(token), CREATED);
+        return new ResponseEntity<>(authService.register(user), CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> performLogin(@RequestBody UserLoginDto user) {
+        return new ResponseEntity<>(authService.login(user), OK);
     }
 }
