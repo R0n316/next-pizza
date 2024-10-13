@@ -3,8 +3,7 @@ app:
     secret: next-pizza-secret
     subject: User details
     issuer: next pizza api
-#    expiration: 900000
-    expiration: 15000
+    expiration: 900000
     refresh-expiration: 604800000
 
 spring:
