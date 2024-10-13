@@ -3,11 +3,14 @@ package ru.alex.nextpizzaapi.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.alex.nextpizzaapi.database.entity.User;
 import ru.alex.nextpizzaapi.database.repository.UserRepository;
 import ru.alex.nextpizzaapi.dto.auth.AuthResponse;
 import ru.alex.nextpizzaapi.dto.user.UserLoginDto;
 import ru.alex.nextpizzaapi.dto.user.UserRegisterDto;
+import ru.alex.nextpizzaapi.exception.EmailAlreadyInUseException;
 import ru.alex.nextpizzaapi.mapper.user.UserRegisterMapper;
 
 @Service
@@ -29,18 +32,26 @@ public class AuthService {
     }
 
     public AuthResponse register(UserRegisterDto user) {
-        userRepository.save(userRegisterMapper.toEntity(user));
-        String token = jwtService.generateToken(user.email());
+        userRepository.findByEmail(user.email())
+                .ifPresent(it -> {
+                    throw new EmailAlreadyInUseException();
+                });
+        User savedUser = userRepository.save(userRegisterMapper.toEntity(user));
+        jwtService.generateRefreshToken(savedUser);
+        String token = jwtService.generateAccessToken(user.email());
         return new AuthResponse(token);
     }
 
-    public AuthResponse login(UserLoginDto user) {
+    public AuthResponse login(UserLoginDto userDto) {
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
-                user.email(),
-                user.password()
+                userDto.email(),
+                userDto.password()
         );
         authManager.authenticate(authInputToken);
-        String token = jwtService.generateToken(user.email());
+        User user = userRepository.findByEmail(userDto.email())
+                .orElseThrow(() -> new UsernameNotFoundException("user with email " + userDto.email() + " not found"));
+        jwtService.generateRefreshToken(user);
+        String token = jwtService.generateAccessToken(userDto.email());
         return new AuthResponse(token);
     }
 }

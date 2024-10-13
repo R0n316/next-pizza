@@ -6,22 +6,37 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.alex.nextpizzaapi.dto.error.ErrorResponse;
 import ru.alex.nextpizzaapi.exception.CartTokenNotFoundException;
+import ru.alex.nextpizzaapi.exception.EmailAlreadyInUseException;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartTokenNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCartTokenNotFoundException(CartTokenNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(NOT_FOUND.value(), System.currentTimeMillis(), ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                System.currentTimeMillis(),
+                ex.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(UNAUTHORIZED.value(), System.currentTimeMillis(), ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                System.currentTimeMillis(),
+                ex.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(EmailAlreadyInUseException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                System.currentTimeMillis(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, CONFLICT);
     }
 }

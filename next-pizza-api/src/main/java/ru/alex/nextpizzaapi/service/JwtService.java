@@ -4,14 +4,25 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.alex.nextpizzaapi.database.entity.RefreshToken;
+import ru.alex.nextpizzaapi.database.entity.User;
+import ru.alex.nextpizzaapi.database.repository.RefreshTokenRepository;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class JwtService {
     @Value("${app.jwt.secret}")
     private String secret;
@@ -22,8 +33,22 @@ public class JwtService {
     @Value("${app.jwt.issuer}")
     private String issuer;
 
-    public String generateToken(String email) throws JWTVerificationException {
-        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(15).toInstant());
+    @Value("${app.jwt.expiration}")
+    private long expirationTime;
+
+    @Value("${app.jwt.refresh-expiration}")
+    private long refreshExpirationTime;
+
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    public JwtService(RefreshTokenRepository refreshTokenRepository,
+                      ObjectMapper ignoredObjectMapper) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
+    public String generateAccessToken(String email) throws JWTVerificationException {
+        Date expirationDate = Date.from(ZonedDateTime.now().toInstant().plusMillis(expirationTime));
         return JWT.create()
                 .withSubject(subject)
                 .withClaim("email", email)
@@ -33,13 +58,47 @@ public class JwtService {
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    public String validateTokenAndRetrieveClaim(String token) {
+    @Transactional
+    public void generateRefreshToken(User user) throws JWTVerificationException {
+        Date expirationDate = Date.from(ZonedDateTime.now().toInstant().plusMillis(refreshExpirationTime));
+        String token = JWT.create()
+                .withSubject(subject)
+                .withClaim("email", user.getEmail())
+                .withIssuedAt(new Date())
+                .withIssuer(issuer)
+                .withExpiresAt(expirationDate)
+                .sign(Algorithm.HMAC256(secret));
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(token)
+                .user(user)
+                .build();
+        refreshTokenRepository.save(refreshToken);
+    }
+
+
+    public String validateTokenAndRetrieveClaim(String token, HttpServletResponse response) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withSubject(subject)
                 .withIssuer(issuer)
                 .build();
-
-        DecodedJWT jwt = verifier.verify(token);
+        DecodedJWT jwt;
+        try {
+            jwt = verifier.verify(token);
+        } catch (TokenExpiredException ex) {
+            jwt = JWT.decode(token);
+            String email = jwt.getClaim("email").asString();
+            Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(email);
+            if(refreshToken.isPresent()) {
+                verifier.verify(refreshToken.get().getToken());
+                String newAccessToken = generateAccessToken(email);
+                Cookie cookie = new Cookie("jwt-token", newAccessToken);
+                cookie.setHttpOnly(true);
+                cookie.setSecure(true);
+                response.addCookie(cookie);
+            } else {
+                throw new JWTVerificationException("refresh token is not valid");
+            }
+        }
         return jwt.getClaim("email").asString();
     }
 }
