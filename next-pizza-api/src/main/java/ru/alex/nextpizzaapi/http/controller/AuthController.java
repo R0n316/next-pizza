@@ -1,5 +1,6 @@
 package ru.alex.nextpizzaapi.http.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> performLogin(@RequestBody UserLoginDto user) {
-        return new ResponseEntity<>(authService.login(user), OK);
+    public ResponseEntity<AuthResponse> performLogin(@RequestBody UserLoginDto user, HttpServletResponse response) {
+        return new ResponseEntity<>(authService.login(user, response), OK);
     }
 }

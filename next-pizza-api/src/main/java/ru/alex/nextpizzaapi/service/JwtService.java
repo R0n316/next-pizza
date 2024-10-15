@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,8 @@ import ru.alex.nextpizzaapi.database.repository.RefreshTokenRepository;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
+
+import static ru.alex.nextpizzaapi.utils.JwtUtils.setJwtTokenToCookies;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,6 +36,7 @@ public class JwtService {
     private String issuer;
 
     @Value("${app.jwt.expiration}")
+    @Getter
     private long expirationTime;
 
     @Value("${app.jwt.refresh-expiration}")
@@ -72,6 +75,8 @@ public class JwtService {
                 .token(token)
                 .user(user)
                 .build();
+        refreshTokenRepository.findByUserEmail(user.getEmail())
+                .ifPresent(foundToken -> refreshToken.setId(foundToken.getId()));
         refreshTokenRepository.save(refreshToken);
     }
 
@@ -91,10 +96,7 @@ public class JwtService {
             if(refreshToken.isPresent()) {
                 verifier.verify(refreshToken.get().getToken());
                 String newAccessToken = generateAccessToken(email);
-                Cookie cookie = new Cookie("jwt-token", newAccessToken);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true);
-                response.addCookie(cookie);
+                setJwtTokenToCookies(newAccessToken, response);
             } else {
                 throw new JWTVerificationException("refresh token is not valid");
             }

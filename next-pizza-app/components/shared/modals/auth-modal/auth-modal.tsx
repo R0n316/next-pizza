@@ -1,6 +1,6 @@
 
 import {Button, Dialog} from "@/components/ui";
-import {DialogContent} from "@/components/ui/dialog";
+import {DialogContent, DialogTitle} from "@/components/ui/dialog";
 import Image from "next/image";
 import {LoginForm} from "@/components/shared/modals/auth-modal/forms/login-form";
 import React from "react";
@@ -23,6 +23,7 @@ export const AuthModal: React.FC<Props> = ({open, onClose}) => {
 
     return (
         <Dialog open={open} onOpenChange={handleClose} >
+            <DialogTitle/>
             <DialogContent className={'w-[450px] bg-white p-10'}>
                 {
                     type === 'login' ?

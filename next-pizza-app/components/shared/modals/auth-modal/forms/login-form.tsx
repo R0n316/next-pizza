@@ -5,6 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {FormInput, Title} from "@/components/shared";
 import {Button} from "@/components/ui";
 import toast from "react-hot-toast";
+import {Api} from "@/services/api-client";
 
 interface Props {
     onClose?: () => void;
@@ -20,20 +21,19 @@ export const LoginForm: React.FC<Props> = ({onClose}) => {
     });
 
     const onSubmit = async (data: FormLoginData) => {
+        const response = await Api.auth.signIn(data);
         try {
-            /*
-                const response = await Api.auth.singIn(data);
-                if (!response.ok) {
-                    throw Error();
-                }
-             */
+            if (response.status !== 200) {
+                throw new Error('Failed to sign in');
+            }
             onClose?.();
             toast.success('Вы успешно вошли в аккаунт', {
                 icon: '✅'
             });
         } catch (err) {
+            const errorMessage = response.data !== undefined ? response.data.message : '';
             console.error('error [LOGIN]', err);
-            toast.error('Не удалось войти в аккаунт', {
+            toast.error(`Не удалось войти в аккаунт. (${errorMessage}).`, {
                 icon: '❌'
             });
         }
@@ -48,7 +48,7 @@ export const LoginForm: React.FC<Props> = ({onClose}) => {
                 </div>
                 
                 <FormInput name={'email'} label={'E-mail'} required={true} />
-                <FormInput name={'password'} label={'Пароль'} required={true} />
+                <FormInput type={'password'} name={'password'} label={'Пароль'} required={true} />
 
                 <Button
                     loading={form.formState.isSubmitting}

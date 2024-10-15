@@ -1,5 +1,6 @@
 package ru.alex.nextpizzaapi.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,7 @@ import ru.alex.nextpizzaapi.dto.user.UserLoginDto;
 import ru.alex.nextpizzaapi.dto.user.UserRegisterDto;
 import ru.alex.nextpizzaapi.exception.EmailAlreadyInUseException;
 import ru.alex.nextpizzaapi.mapper.user.UserRegisterMapper;
+import ru.alex.nextpizzaapi.utils.JwtUtils;
 
 @Service
 public class AuthService {
@@ -42,7 +44,7 @@ public class AuthService {
         return new AuthResponse(token);
     }
 
-    public AuthResponse login(UserLoginDto userDto) {
+    public AuthResponse login(UserLoginDto userDto, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
                 userDto.email(),
                 userDto.password()
@@ -52,6 +54,7 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("user with email " + userDto.email() + " not found"));
         jwtService.generateRefreshToken(user);
         String token = jwtService.generateAccessToken(userDto.email());
+        JwtUtils.setJwtTokenToCookies(token, response);
         return new AuthResponse(token);
     }
 }
