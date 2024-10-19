@@ -73,6 +73,10 @@ export interface UserLoginDto {
     password: string;
 }
 
+export interface UserRegisterDto extends UserLoginDto{
+    fullName: string;
+}
+
 export interface ErrorResponse {
     timestamp: number;
     message: string;

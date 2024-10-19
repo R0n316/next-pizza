@@ -33,7 +33,7 @@ public class AuthService {
         this.authManager = authManager;
     }
 
-    public AuthResponse register(UserRegisterDto user) {
+    public AuthResponse register(UserRegisterDto user, HttpServletResponse response) {
         userRepository.findByEmail(user.email())
                 .ifPresent(it -> {
                     throw new EmailAlreadyInUseException();
@@ -41,6 +41,7 @@ public class AuthService {
         User savedUser = userRepository.save(userRegisterMapper.toEntity(user));
         jwtService.generateRefreshToken(savedUser);
         String token = jwtService.generateAccessToken(user.email());
+        JwtUtils.setJwtTokenToCookies(token, response);
         return new AuthResponse(token);
     }
 
