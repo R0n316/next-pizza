@@ -1,33 +1,26 @@
 package ru.alex.nextpizzaapi.database.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Entity
-@Table(name = "verification_code")
+@Table(name = "refresh_token")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VerificationCode {
+@Builder
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    private String token;
+
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    private String code;
-
-    private String role;
-
-    @Column(name = "expires_at")
-    private Instant expiresAt;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
 }

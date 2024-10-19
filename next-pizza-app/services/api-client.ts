@@ -3,11 +3,13 @@ import * as ingredients from './ingredients'
 import * as categories from './categories'
 import * as cart from './cart'
 import * as order from './order'
+import * as auth from './auth'
 
 export const Api = {
     products,
     ingredients,
     categories,
     cart,
-    order
+    order,
+    auth
 }

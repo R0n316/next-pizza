@@ -9,7 +9,7 @@ export const formLoginSchema = z.object({
 
 export const formRegisterSchema = formLoginSchema.merge(
     z.object({
-        fullName: z.string().min(2, {message: 'Введите имя и фамилию'}),
+        fullName: z.string().min(5, {message: 'Введите ФИО'}),
         confirmPassword: passwordSchema
     }),
 ).refine(data => data.password === data.confirmPassword, {

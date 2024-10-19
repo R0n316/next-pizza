@@ -1,7 +1,7 @@
 INSERT INTO users(full_name, email, password, verified)
 VALUES
-('user', 'user@gmail.com', '123', now()),
-('admin', 'admin@gmail.com', '123', now());
+('user', 'user@gmail.com', '{noop}123', now()),
+('admin', 'admin@gmail.com', '{noop}123', now());
 
 INSERT INTO category(name)
 VALUES

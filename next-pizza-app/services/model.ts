@@ -67,3 +67,17 @@ export interface OrderPayment {
 export interface Payment {
     cardNumber: string;
 }
+
+export interface UserLoginDto {
+    email: string;
+    password: string;
+}
+
+export interface UserRegisterDto extends UserLoginDto{
+    fullName: string;
+}
+
+export interface ErrorResponse {
+    timestamp: number;
+    message: string;
+}

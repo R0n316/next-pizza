@@ -180,6 +180,7 @@ public class CartService {
             Cookie cookie = new Cookie("cartToken", token);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
+            cookie.setSecure(true);
             response.addCookie(cookie);
             return cartRepository.save(cart);
         });

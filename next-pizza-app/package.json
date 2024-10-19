@@ -26,6 +26,7 @@
     "nextjs-toploader": "^3.7.15",
     "qs": "^6.13.0",
     "react": "^18",
+    "react-cookie": "^7.2.1",
     "react-dadata": "^2.23.3",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
