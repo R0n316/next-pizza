@@ -6,6 +6,7 @@ import {CircleUser, User} from "lucide-react";
 import {useCookies} from "react-cookie";
 import Link from "next/link";
 import jwt_decode from 'jsonwebtoken';
+import {Api} from "@/services/api-client";
 
 interface Props {
     onClickSignIn?: () => void;
@@ -17,6 +18,16 @@ export const ProfileButton: React.FC<Props> = ({className, onClickSignIn}) => {
     const [isClient, setIsClient] = useState(false);
     const [isTokenValid, setIsTokenValid] = useState(false);
 
+    const refreshToken = async () => {
+        const response = await Api.auth.validateJwt(cookies['jwt']);
+        if (response.status === 200) {
+            setIsTokenValid(true);
+        } else {
+            setIsTokenValid(false);
+            document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+    }
+
     useEffect(() => {
         setIsClient(true);
 
@@ -24,9 +35,9 @@ export const ProfileButton: React.FC<Props> = ({className, onClickSignIn}) => {
             try {
                 const decodedToken: any = jwt_decode.decode(cookies['jwt']);
                 if(decodedToken.exp && decodedToken.exp * 1000 > Date.now()) {
-                    setIsTokenValid(true)
+                    setIsTokenValid(true);
                 } else {
-                    setIsTokenValid(false);
+                    refreshToken();
                 }
             } catch (err) {
                 console.error('Invalid token', err);

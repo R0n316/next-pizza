@@ -32,3 +32,15 @@ export const register = async (data: UserRegisterDto): Promise<AxiosResponse<voi
         throw error;
     }
 }
+
+export const validateJwt = async (jwt: string): Promise<AxiosResponse<void | ErrorResponse>> => {
+    try {
+        return await axiosInstance.patch<void>(`${ApiRoutes.AUTH}/refresh-token`, {jwt});
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return error.response as AxiosResponse<ErrorResponse>;
+        }
+        throw error;
+    }
+
+}

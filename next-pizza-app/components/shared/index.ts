@@ -26,6 +26,7 @@ export {AddressInput} from '../address-input/address-input'
 export {ProfileButton} from './profile-button'
 export {InfoBlock} from './info-block'
 export {UnauthorizedBanner} from './unauthorized-banner'
+export {ProfileForm} from './profile-form'
 export * from './modals';
 export * from './form'
 export * from './checkout'

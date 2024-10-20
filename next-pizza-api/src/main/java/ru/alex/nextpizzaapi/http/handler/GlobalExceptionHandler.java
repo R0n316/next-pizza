@@ -1,5 +1,7 @@
 package ru.alex.nextpizzaapi.http.handler;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,5 +40,14 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, CONFLICT);
+    }
+
+    @ExceptionHandler(JWTCreationException.class)
+    public ResponseEntity<ErrorResponse> handleJWTVerificationException(JWTVerificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                System.currentTimeMillis(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 }

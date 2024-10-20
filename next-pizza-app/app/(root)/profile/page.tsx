@@ -1,12 +1,11 @@
 import {Api} from "@/services/api-client";
-import {UnauthorizedBanner} from "@/components/shared";
+import {ProfileForm, UnauthorizedBanner} from "@/components/shared";
+import {UserReadDto} from "@/services/model";
 
 export default async function ProfilePage() {
     const response = await Api.user.getByEmail();
-    console.log(response.status);
     if(response.status !== 200) {
         return <UnauthorizedBanner/>;
     }
-    return <div>ДОСТУП РАЗРЕШЁН!!!!!!</div>
-
+    return <ProfileForm data={response.data as UserReadDto}/>;
 }

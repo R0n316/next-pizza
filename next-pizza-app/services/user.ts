@@ -5,9 +5,9 @@ import axios, {AxiosResponse} from "axios";
 import {ReadonlyRequestCookies} from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export const getByEmail = async (): Promise<AxiosResponse<UserReadDto | ErrorResponse>> => {
+    const allCookies: ReadonlyRequestCookies = require('next/headers').cookies();
     try {
         // const allCookies = cookies().getAll();
-        const allCookies: ReadonlyRequestCookies = require('next/headers').cookies();
         const cookieString = allCookies.getAll().reduce((acc, cookie) => {
             return acc + (acc ? '; ' : '') + cookie.name + '=' + cookie.value;
         }, '');
