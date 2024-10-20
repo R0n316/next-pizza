@@ -41,7 +41,7 @@ public class AuthService {
         User savedUser = userRepository.save(userRegisterMapper.toEntity(user));
         jwtService.generateRefreshToken(savedUser);
         String token = jwtService.generateAccessToken(user.email());
-        JwtUtils.setJwtTokenToCookies(token, response);
+        JwtUtils.setJwtToCookies(token, response);
         return new AuthResponse(token);
     }
 
@@ -55,7 +55,7 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("user with email " + userDto.email() + " not found"));
         jwtService.generateRefreshToken(user);
         String token = jwtService.generateAccessToken(userDto.email());
-        JwtUtils.setJwtTokenToCookies(token, response);
+        JwtUtils.setJwtToCookies(token, response);
         return new AuthResponse(token);
     }
 }

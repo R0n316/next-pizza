@@ -77,6 +77,12 @@ export interface UserRegisterDto extends UserLoginDto{
     fullName: string;
 }
 
+export interface UserReadDto {
+    id: number;
+    fullName: string;
+    email: string;
+}
+
 export interface ErrorResponse {
     timestamp: number;
     message: string;

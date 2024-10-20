@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = Optional.ofNullable(request.getCookies())
                     .stream()
                     .flatMap(Arrays::stream)
-                    .filter(c -> c.getName().equals("jwt-token"))
+                    .filter(c -> c.getName().equals("jwt"))
                     .findFirst()
                     .map(Cookie::getValue)
                     .orElseThrow(() -> new JWTVerificationException("JWT token not found in cookies"));
@@ -78,7 +78,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/api");
+        return request.getRequestURI().startsWith("/api") &&
+                !request.getRequestURI().matches(".*/users.*");
     }
 
     public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable ex) {

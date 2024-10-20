@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
-import static ru.alex.nextpizzaapi.utils.JwtUtils.setJwtTokenToCookies;
+import static ru.alex.nextpizzaapi.utils.JwtUtils.setJwtToCookies;
 
 @Service
 @Transactional(readOnly = true)
@@ -96,7 +96,7 @@ public class JwtService {
             if(refreshToken.isPresent()) {
                 verifier.verify(refreshToken.get().getToken());
                 String newAccessToken = generateAccessToken(email);
-                setJwtTokenToCookies(newAccessToken, response);
+                setJwtToCookies(newAccessToken, response);
             } else {
                 throw new JWTVerificationException("refresh token is not valid");
             }

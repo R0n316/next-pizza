@@ -4,6 +4,8 @@ import React, {useEffect, useState} from 'react';
 import {Button, Skeleton} from "@/components/ui";
 import {CircleUser, User} from "lucide-react";
 import {useCookies} from "react-cookie";
+import Link from "next/link";
+import jwt_decode from 'jsonwebtoken';
 
 interface Props {
     onClickSignIn?: () => void;
@@ -11,13 +13,27 @@ interface Props {
 }
 
 export const ProfileButton: React.FC<Props> = ({className, onClickSignIn}) => {
-    const [cookies] = useCookies(['jwt-token']);
-
+    const [cookies] = useCookies(['jwt']);
     const [isClient, setIsClient] = useState(false);
+    const [isTokenValid, setIsTokenValid] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
+
+        if(cookies['jwt']) {
+            try {
+                const decodedToken: any = jwt_decode.decode(cookies['jwt']);
+                if(decodedToken.exp && decodedToken.exp * 1000 > Date.now()) {
+                    setIsTokenValid(true)
+                } else {
+                    setIsTokenValid(false);
+                }
+            } catch (err) {
+                console.error('Invalid token', err);
+                setIsTokenValid(false);
+            }
+        }
+    }, [cookies]);
 
     if (!isClient) {
         return <Skeleton className={'w-[120px] h-10'}/>
@@ -25,16 +41,18 @@ export const ProfileButton: React.FC<Props> = ({className, onClickSignIn}) => {
     return (
         <div className={className}>
             {
-                cookies["jwt-token"] === undefined ? (
+                !isTokenValid ? (
                     <Button onClick={onClickSignIn} variant="outline" className="flex items-center gap-1">
                         <User size={16} />
                         Войти
                     </Button>
                 ) : (
-                    <Button variant="secondary" className="flex items-center gap-2">
-                        <CircleUser size={18} />
-                        Профиль
-                    </Button>
+                    <Link href={'/profile'}>
+                        <Button variant="secondary" className="flex items-center gap-2">
+                            <CircleUser size={18} />
+                            Профиль
+                        </Button>
+                    </Link>
                 )
             }
 
