@@ -10,35 +10,35 @@ import ru.alex.nextpizzaapi.database.entity.User;
 import ru.alex.nextpizzaapi.database.repository.UserRepository;
 import ru.alex.nextpizzaapi.dto.auth.AuthResponse;
 import ru.alex.nextpizzaapi.dto.user.UserLoginDto;
-import ru.alex.nextpizzaapi.dto.user.UserRegisterDto;
+import ru.alex.nextpizzaapi.dto.user.UserCreateEditDto;
 import ru.alex.nextpizzaapi.exception.EmailAlreadyInUseException;
-import ru.alex.nextpizzaapi.mapper.user.UserRegisterMapper;
+import ru.alex.nextpizzaapi.mapper.user.UserCreateEditMapper;
 import ru.alex.nextpizzaapi.utils.JwtUtils;
 
 @Service
 public class AuthService {
     private final UserRepository userRepository;
-    private final UserRegisterMapper userRegisterMapper;
+    private final UserCreateEditMapper userCreateEditMapper;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
     @Autowired
     public AuthService(UserRepository userRepository,
-                       UserRegisterMapper userRegisterMapper,
+                       UserCreateEditMapper userCreateEditMapper,
                        JwtService jwtService,
                        AuthenticationManager authManager) {
         this.userRepository = userRepository;
-        this.userRegisterMapper = userRegisterMapper;
+        this.userCreateEditMapper = userCreateEditMapper;
         this.jwtService = jwtService;
         this.authManager = authManager;
     }
 
-    public AuthResponse register(UserRegisterDto user, HttpServletResponse response) {
+    public AuthResponse register(UserCreateEditDto user, HttpServletResponse response) {
         userRepository.findByEmail(user.email())
                 .ifPresent(it -> {
                     throw new EmailAlreadyInUseException();
                 });
-        User savedUser = userRepository.save(userRegisterMapper.toEntity(user));
+        User savedUser = userRepository.save(userCreateEditMapper.toEntity(user));
         jwtService.generateRefreshToken(savedUser);
         String token = jwtService.generateAccessToken(user.email());
         JwtUtils.setJwtToCookies(token, response);

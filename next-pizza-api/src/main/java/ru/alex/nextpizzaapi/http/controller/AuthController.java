@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.alex.nextpizzaapi.dto.auth.AuthResponse;
 import ru.alex.nextpizzaapi.dto.user.UserLoginDto;
-import ru.alex.nextpizzaapi.dto.user.UserRegisterDto;
+import ru.alex.nextpizzaapi.dto.user.UserCreateEditDto;
 import ru.alex.nextpizzaapi.service.AuthService;
 import ru.alex.nextpizzaapi.service.JwtService;
 
@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> performRegistration(@RequestBody UserRegisterDto user, HttpServletResponse response) {
+    public ResponseEntity<AuthResponse> performRegistration(@RequestBody UserCreateEditDto user, HttpServletResponse response) {
         return new ResponseEntity<>(authService.register(user, response), CREATED);
     }
 

@@ -10,17 +10,18 @@ import {Container} from "@/components/shared/container";
 import {Title} from "@/components/shared/title";
 import {FormInput} from "@/components/shared/form";
 import {Button} from "@/components/ui";
+import {Api} from "@/services/api-client";
 
 interface Props {
-    data: UserReadDto
+    user: UserReadDto
 }
 
-export const ProfileForm: React.FC<Props> = ({data}) => {
+export const ProfileForm: React.FC<Props> = ({user}) => {
     const form = useForm({
         resolver: zodResolver(formRegisterSchema),
         defaultValues: {
-            fullName: '',
-            email: '',
+            fullName: user.fullName || '',
+            email: user.email || '',
             password: '',
             confirmPassword: ''
         }
@@ -28,7 +29,7 @@ export const ProfileForm: React.FC<Props> = ({data}) => {
 
     const onSubmit = async (data: FormRegisterData) => {
         try {
-            await updateUserInfo({
+            await Api.user.updateUserInfo(user.id ,{
                 email: data.email,
                 fullName: data.fullName,
                 password: data.password
@@ -45,12 +46,12 @@ export const ProfileForm: React.FC<Props> = ({data}) => {
 
     const onCLickSignOut = () => {
         document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        window.location.href = '/'; // This will redirect to the homepage
+        window.location.href = '/';
     };
 
     return (
         <Container className={'my-10'}>
-            <Title text={`Личные данные | #${data.id}`} size={'md'} className={'font-bold'}/>
+            <Title text={`Личные данные | #${user.id}`} size={'md'} className={'font-bold'}/>
             <FormProvider {...form}>
                 <form className={'flex flex-col gap-5 w-96 mt-10'} onSubmit={form.handleSubmit(onSubmit)}>
                     <FormInput name={'email'} label={'E-mail'} required={true}/>
@@ -59,7 +60,11 @@ export const ProfileForm: React.FC<Props> = ({data}) => {
                     <FormInput type={'password'} name={'password'} label={'Новый пароль'} required={true}/>
                     <FormInput type={'password'} name={'confirmPassword'} label={'Повторите пароль'} required={true}/>
 
-                    <Button disabled={form.formState.isSubmitting} className={'text-base mt-10'} type={'submit'}>
+                    <Button
+                        disabled={form.formState.isSubmitting}
+                        className={'text-base mt-10'}
+                        type={'submit'}
+                    >
                         Сохранить
                     </Button>
 

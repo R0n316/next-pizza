@@ -7,5 +7,5 @@ export default async function ProfilePage() {
     if(response.status !== 200) {
         return <UnauthorizedBanner/>;
     }
-    return <ProfileForm data={response.data as UserReadDto}/>;
+    return <ProfileForm user={response.data as UserReadDto}/>;
 }

@@ -73,7 +73,7 @@ export interface UserLoginDto {
     password: string;
 }
 
-export interface UserRegisterDto extends UserLoginDto{
+export interface UserCreateEditDto extends UserLoginDto{
     fullName: string;
 }
 

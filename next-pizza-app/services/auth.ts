@@ -1,4 +1,4 @@
-import {ErrorResponse, UserLoginDto, UserRegisterDto} from "@/services/model";
+import {ErrorResponse, UserLoginDto, UserCreateEditDto} from "@/services/model";
 import {axiosInstance} from "@/services/instance";
 import {ApiRoutes} from "@/services/constants";
 import axios, {AxiosResponse} from "axios";
@@ -18,7 +18,7 @@ export const signIn = async (data: UserLoginDto): Promise<AxiosResponse<void | E
     }
 };
 
-export const register = async (data: UserRegisterDto): Promise<AxiosResponse<void | ErrorResponse>> => {
+export const register = async (data: UserCreateEditDto): Promise<AxiosResponse<void | ErrorResponse>> => {
     try {
         return await axiosInstance.post<void>(
             `${ApiRoutes.AUTH}/register`,
