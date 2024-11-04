@@ -37,3 +37,7 @@ databaseChangeLog:
       file: db/changelog/db-create-refresh-token-table-1.0.sql
   - include:
       file: db/changelog/db-create-refresh-token-table-1.1.sql
+  - include:
+      file: db/changelog/db-create-story-table-1.0.sql
+  - include:
+      file: db/changelog/db-create-story-item-table-1.0.sql

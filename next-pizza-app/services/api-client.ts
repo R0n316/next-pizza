@@ -5,6 +5,7 @@ import * as cart from './cart'
 import * as order from './order'
 import * as auth from './auth'
 import * as user from './user'
+import * as stories from './stories'
 
 export const Api = {
     products,
@@ -13,5 +14,6 @@ export const Api = {
     cart,
     order,
     auth,
-    user
+    user,
+    stories
 }

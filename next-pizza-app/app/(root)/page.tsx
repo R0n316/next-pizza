@@ -1,4 +1,4 @@
-import {Container, Filters, Title, TopBar} from "@/components/shared";
+import {Container, Filters, Title, TopBar, Stories} from "@/components/shared";
 import {ProductsGroupList} from "@/components/shared/products-group-list";
 import {Suspense} from "react";
 import {findPizzas, GetSearchParams} from "@/lib/find-pizzas";
@@ -10,6 +10,7 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
           <Container className={'mt-10'}>
               <Title text={'Все пиццы'} size={'lg'} className={'font-extrabold'} />
           </Container>
+          <Stories/>
           <TopBar categories={categories.filter(category => category.products.length > 0)}/>
           <Container className={'mt-10 pb-14'}>
               <div className={'flex gap-[80px]'}>

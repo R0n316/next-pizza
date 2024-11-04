@@ -32,5 +32,6 @@ export const getByEmail = async (): Promise<AxiosResponse<UserReadDto | ErrorRes
 }
 
 export const updateUserInfo = async (userId: number, user: UserCreateEditDto): Promise<UserReadDto> => {
-    return (await axiosInstance.patch<UserReadDto>(`${ApiRoutes.USERS}/${userId}`, user, {withCredentials: true})).data;
+    const config = getServerCookiesAxiosConfig();
+    return (await axiosInstance.patch<UserReadDto>(`${ApiRoutes.USERS}/${userId}`, user, config)).data; // FIXME not work
 }

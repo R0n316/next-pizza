@@ -5,5 +5,6 @@ export enum ApiRoutes {
     CART = 'cart',
     ORDERS = 'orders',
     AUTH = 'auth',
-    USERS = 'users'
+    USERS = 'users',
+    STORIES = 'stories'
 }

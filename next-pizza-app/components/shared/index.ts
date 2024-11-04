@@ -27,6 +27,7 @@ export {ProfileButton} from './profile-button'
 export {InfoBlock} from './info-block'
 export {UnauthorizedBanner} from './unauthorized-banner'
 export {ProfileForm} from './profile-form'
+export {Stories} from './stories'
 export * from './modals';
 export * from './form'
 export * from './checkout'

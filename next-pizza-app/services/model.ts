@@ -87,3 +87,14 @@ export interface ErrorResponse {
     timestamp: number;
     message: string;
 }
+
+export interface Story {
+    id: number;
+    previewImage: string;
+    items: StoryItem[];
+}
+
+export interface StoryItem {
+    id: number;
+    sourceUrl: string;
+}
